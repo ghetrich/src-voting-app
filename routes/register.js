@@ -1,29 +1,38 @@
-const Router = require('express').Router()
+const Router = require("express").Router();
+const Register = require("../models/register");
+const nanoid = require("nanoid") ;
 
+Router.post("/", (req, res) => {
+	const { othernames, surname, email, eligibility, campus, index } =
+		req.body;
 
-Router.get("/", (req, res) => {
-return res.send({
-	name: "api",
-	version: "1.0.0",
-	description: "Tawiah SRC App",
-	main: "server.js",
-	scripts: {
-		test: 'echo "Error: no test specified" && exit 1',
-	},
-	keywords: ["Voting", "App"],
-	author: "rBOUARO",
-	license: "ISC",
-	dependencies: {
-		cors: "^2.8.5",
-		dotenv: "^10.0.0",
-		express: "^4.17.1",
-		gitignore: "^0.7.0",
-		nodemon: "^2.0.12",
-	},
+	if (
+		(!othernames || !surname || !email,
+		!eligibility || !campus || !index)
+	) {
+		return res.status(404).send("Empty field detected!");
+	}
+
+	const newRegister = new Register({
+		othernames,
+		surname,
+		email,
+		eligibility,
+		voteCode: nanoid(7),
+		campus,
+		index,
+	});
+
+	newRegister
+		.save()
+		.then(result => {
+			return res.status(200).send(result);
+		})
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send(err);
+            
+		});
 });
-})
 
-
-
-
-module.exports =  Router
+module.exports = Router;
