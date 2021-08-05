@@ -8,7 +8,7 @@ app.use(express.json());
 
 mongoose
 	.connect(
-		process.env.DB_URI ||
+		
 			"mongodb+srv://ghet:IT128411@cluster0.ayjeb.mongodb.net/gctu-src-voting-app",
 		{
 			useNewUrlParser: true,
