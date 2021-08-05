@@ -1,6 +1,6 @@
 const Router = require("express").Router();
 const Register = require("../models/register");
-const nanoid = require("nanoid") ;
+const {nanoid} = require("nanoid") ;
 
 Router.post("/", (req, res) => {
 	const { othernames, surname, email, eligibility, campus, index } =
