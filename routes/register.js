@@ -12,13 +12,13 @@ Router.post("/", (req, res) => {
 	) {
 		return res.status(404).send("Empty field detected!");
 	}
-
+ let code = nanoid(7).toUpperCase()
 	const newRegister = new Register({
 		othernames,
 		surname,
 		email,
 		eligibility,
-		voteCode: nanoid(7),
+		voteCode: code,
 		campus,
 		index,
 	});
@@ -34,5 +34,14 @@ Router.post("/", (req, res) => {
             
 		});
 });
+
+Router.get('/', (req, res) => {
+    Register.find({}).then(result => {
+        return res.status(200).send(result);
+    }).catch(err => {
+        return res.status(500).send(err);
+    })
+    
+})
 
 module.exports = Router;
