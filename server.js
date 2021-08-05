@@ -18,6 +18,10 @@ mongoose
 		});
 	})
 
+app.get('/', (req, res) => {
+	return res.send("Welcome! THIS GCTU SRC VOTING APP API")
+})
+
 app.use("register", require("./routes/register"))
 	
 
