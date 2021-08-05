@@ -7,7 +7,8 @@ const oAuth2Client = new google.auth.OAuth2(
 	process.env.CLIENT_SECRET,
 	process.env.REDIRECT_URL
 );
-oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
+const REFRESH_TOKEN = '1//042SDWeqKZldcCgYIARAAGAQSNwF-L9IrQ7G7YfQT02ZQiC8ATcnrk3IT5EyLNpbO_flfDff7bzKAOJUQ12mOqv882j7_Lhezca8'
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 const sendMail = async (to, subject, text, html) => {
 	try {
