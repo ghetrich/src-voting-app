@@ -3,7 +3,7 @@ const Register = require("../models/register");
 const { nanoid } = require("nanoid");
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const {sendMail} = require("../mailService");
+const sendMail = require("../mailService");
 
 
 
