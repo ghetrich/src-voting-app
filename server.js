@@ -5,7 +5,7 @@ const path = require("path");
 require("dotenv").config();
 
 app.use(express.json());
-app.use("register", require("./routes/register"));
+app.use("/register", require("./routes/register"));
 mongoose
 	.connect(
 		
