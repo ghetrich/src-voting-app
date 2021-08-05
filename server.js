@@ -5,11 +5,11 @@ const path = require("path");
 require("dotenv").config();
 
 app.use(express.json());
-
+app.use("register", require("./routes/register"));
 mongoose
 	.connect(
 		
-			"mongodb+srv://ghet:IT128411@cluster0.ayjeb.mongodb.net/gctu-src-voting-app",
+			"mongodb+srv://ghet:IT128411@cluster0.ayjeb.mongodb.net/gctu-src-voting-app?retryWrites=true&w=majority",
 		{
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
@@ -26,6 +26,6 @@ app.get('/', (req, res) => {
 	return res.send("Welcome! THIS GCTU SRC VOTING APP API")
 })
 
-app.use("register", require("./routes/register"))
+
 	
 
