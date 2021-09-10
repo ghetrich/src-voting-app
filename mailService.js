@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const path = require("path");
+
 require("dotenv").config();
 
 const oAuth2Client = new google.auth.OAuth2(
@@ -8,7 +8,6 @@ const oAuth2Client = new google.auth.OAuth2(
 	process.env.CLIENT_SECRET,
 	process.env.REDIRECT_URL
 );
-// const REFRESH_TOKEN = '1//042SDWeqKZldcCgYIARAAGAQSNwF-L9IrQ7G7YfQT02ZQiC8ATcnrk3IT5EyLNpbO_flfDff7bzKAOJUQ12mOqv882j7_Lhezca8'
 oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
 const sendMail = async (to, subject, text, html) => {
