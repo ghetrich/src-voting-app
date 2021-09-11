@@ -13,16 +13,32 @@
   "author": "rBOUARO",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "connect-mongo": "^3.2.0",
     "convert-excel-to-json": "^1.7.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "exceljs": "^4.2.1",
     "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.1",
+    "express-validator": "^6.9.2",
     "gitignore": "^0.7.0",
     "googleapis": "^83.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.5",
+    "multer": "^1.4.2",
     "nanoid": "^3.1.23",
     "nodemailer": "^6.6.3",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "passport": "^0.4.1",
+    "passport-google-oauth": "^2.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "passport-oauth": "^1.0.0",
+    "uuid": "^8.3.2"
   }
 }

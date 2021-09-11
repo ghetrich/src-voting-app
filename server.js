@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const app = express();
 const path = require("path");
 
@@ -7,6 +8,10 @@ require("dotenv").config();
 
 app.use(express.json());
 app.use("/register", require("./routes/register"));
+
+
+app.use("/login", require("./routes/login"));
+app.use("/user", require("./routes/user"));
 mongoose
 	.connect(
 		
