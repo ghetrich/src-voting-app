@@ -4,10 +4,11 @@ const { nanoid } = require("nanoid");
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const sendMail = require("../mailService");
+const restrictedTo = require("../middleware/restricted")
+const authenticate = require("../middleware/auth")
 
 
-
-Router.post("/", (req, res) => {
+Router.post("/new", restrictedTo(["admin"]), (req, res) => {
 	const { othernames, surname, email, eligibility, campus, index } = req.body;
 
 	if ((!othernames || !surname || !email, !eligibility || !campus || !index)) {
@@ -43,7 +44,7 @@ Router.post("/", (req, res) => {
 		});
 });
 
-Router.get("/", (req, res) => {
+Router.get("/", authenticate, (req, res) => {
 	Register.find({})
 		.then(result => {
 			return res.status(200).send(result);

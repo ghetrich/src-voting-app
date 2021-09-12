@@ -10,7 +10,7 @@ app.use(express.json());
 app.use("/register", require("./routes/register"));
 
 
-app.use("/login", require("./routes/login"));
+app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user"));
 mongoose
 	.connect(
