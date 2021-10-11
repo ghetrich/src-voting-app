@@ -1,127 +1,66 @@
-const express = require("express");
+const Router = require("express").Router();
 const User = require("../models/user");
-const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
-const {
-	generateAccessToken,
-	generateRefreshToken,
-} = require("../middleware/generatetoken");
 const bcrypt = require("bcryptjs");
-const login = async (credentials, role, res) => {
-	let { username, password } = credentials;
+const passport = require("passport");
+const initialize = require("../passport-config");
 
-	if (!username || !password) {
-		return res.status(400).send({
-			success: false,
-			msg: "Please enter all fields",
-		});
-	}
+var flash = require("express-flash");
 
-	User.findOne({ username }).then(user => {
-		if (!user) {
-			return res
-				.status(400)
-				.send({ success: false, msg: "User does not exist" });
-		}
+// initialize(
+// 	passport,
+// 	username => {
+// 		return username => User.find(user => user.username === username);
+// 	},
+// 	id => {
+// 		return username => User.find(user => user.id === id);
+// 	}
+// );
 
-		if (!role.some(r => user.role.includes(r))) {
-			return res.status(400).send({
-				success: false,
-				msg: "Please make sure you are signing in from the right portal ",
-			});
-		}
+const LocalStrategy = require("passport-local").Strategy;
 
-		bcrypt.compare(password, user.password).then(isMatch => {
-			if (!isMatch) {
-				return res
-					.status(400)
-					.send({ success: false, msg: "Invalid credentials" });
-			} else {
-				const accessToken = generateAccessToken(user.toJSON());
-
-				const refreshToken = generateRefreshToken(user.toJSON());
-
-				res.cookie("nin", refreshToken, {
-					httpOnly: true,
+passport.use(
+	new LocalStrategy(function (username, password, done) {
+		User.findOne({ username: username }, async (err, user) => {
+			if (err) {
+				return done(err);
+			}
+			if (!user) {
+				return done(null, false, {
+					message: "Email or password incorrect",
 				});
+			}
 
-				return res.status(200).send({ accessToken, refreshToken, user });
-				// jwt.sign(
-				// 	user.toJSON(),
-				// 	process.env.ACCESS_TOKEN_SECRET,
-				// 	// { expiresIn: 3600 },
-				// 	(err, token) => {
-				// 		if (err) throw err;
-
-				// 		return res.send({
-				// 			token,
-				// 			user,
-				// 		});
-				// 	}
-				// );
+			try {
+				if (await bcrypt.compare(password, user.password)) {
+					return done(null, user);
+				} else {
+					return done(null, false, {
+						message: "Email or password incorrect",
+					});
+				}
+			} catch (error) {
+				return done(error);
 			}
 		});
-	});
-};
+	})
+);
 
-const updateRefreshTokenVersion = async userId => {
-	if (!userId) throw new Error();
-	try {
-		const incrementToken = await User.findByIdAndUpdate(userId, {
-			$inc: { tokenVersion: 1 },
-		});
-
-		return true;
-	} catch (error) {
-		return error;
+Router.route("/login").post(
+	passport.authenticate("local", {
+		successRedirect: "/dashboard",
+		failureRedirect: "/",
+		failureFlash: true,
+	}),
+	 (req, res) =>{
+		// req.session.isAuth = true;
+	 req.flash("info", "Flash Message Added");
+	
 	}
-};
+);
 
-const app = express();
-
-app.use(cookieParser());
-
-app.post("/login", (req, res) => {
-	login(req.body, ["admin"], res);
-});
-app.post("/token", async (req, res) => {
-	const token = req.cookies.nin;
-
-	if (!token) {
-		return res.send({ Ok: false, accessToken: "" });
-	}
-
-	let payload = null;
-
-	try {
-		payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-	} catch (error) {
-		console.log(error);
-		return res.send({ Ok: false, accessToken: "" });
-	}
-
-	const user = await User.findById(payload._id);
-
-	if (!user) {
-		return res.send({ Ok: false, accessToken: "" });
-	}
-
-	if (user.tokenVersion !== payload.tokenVersion) {
-		return res.send({ Ok: false, accessToken: "" });
-	}
-
-	updateRefreshTokenVersion(payload._id);
-
-	res.cookie("nin", refreshToken, {
-		httpOnly: true,
-	});
-
-	return res.send({
-		Ok: true,
-		accessToken: generateAccessToken(user.toJSON()),
-	});
+Router.get("/logout", (req, res) => {
+	req.logout();
+	res.redirect(req.headers.referer);
 });
 
-app.post("/logout", (req, res) => {});
-
-module.exports = app;
+module.exports = Router;
