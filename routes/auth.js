@@ -21,6 +21,7 @@ const LocalStrategy = require("passport-local").Strategy;
 passport.use(
 	new LocalStrategy(function (username, password, done) {
 		User.findOne({ username: username }, async (err, user) => {
+			
 			if (err) {
 				return done(err);
 			}
@@ -31,6 +32,7 @@ passport.use(
 			}
 
 			try {
+				
 				if (await bcrypt.compare(password, user.password)) {
 					return done(null, user);
 				} else {
@@ -48,14 +50,15 @@ passport.use(
 Router.route("/login").post(
 	passport.authenticate("local", {
 		successRedirect: "/dashboard",
-		failureRedirect: "/",
+		failureRedirect: "/login",
 		failureFlash: true,
 	}),
-	 (req, res) =>{
-		// req.session.isAuth = true;
-	 req.flash("info", "Flash Message Added");
+	//  (req, res) =>{
+	// 	//req.session.isAuth = true;
+		
+	//  req.flash("info", "Flash Message Added");
 	
-	}
+	// }
 );
 
 Router.get("/logout", (req, res) => {

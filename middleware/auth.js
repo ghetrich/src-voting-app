@@ -1,19 +1,17 @@
-const jwt = require("jsonwebtoken");
-
-const authenticate = roles => (req, res, next) => {
-	const token = req.header("x-auth-token");
-
-	try {
-		if (!token) {
-			return res.status(401).json("No token, authorization denied");
+module.exports = {
+	ensureAuth: function (req, res, next) {
+		if (req.isAuthenticated()) {
+			return next();
 		} else {
-			const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-			req.user = decoded;
-			next();
+			res.redirect("/login");
 		}
-	} catch (error) {
-		res.status(400).json("Token is not valid");
-	}
-};
+	},
 
-module.exports = authenticate;
+	ensureGuest: function (req, res, next) {
+		if (req.isAuthenticated()) {
+			res.redirect("/dashboard");
+		} else {
+			return next();
+		}
+	},
+};

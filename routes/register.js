@@ -3,6 +3,7 @@ const Register = require("../models/register");
 const { nanoid } = require("nanoid");
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
+const { ensureAuth, ensureGuest } = require("../middleware/auth")
 const sendMail = require("../mailService");
 const restrictedTo = require("../middleware/restricted")
 const authenticate = require("../middleware/auth")
@@ -44,7 +45,7 @@ Router.post("/new", restrictedTo(["admin"]), (req, res) => {
 		});
 });
 
-Router.get("/", authenticate, (req, res) => {
+Router.get("/", ensureAuth, (req, res) => {
 	Register.find({})
 		.then(result => {
 			return res.status(200).send(result);
