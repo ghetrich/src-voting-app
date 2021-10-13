@@ -4,8 +4,6 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const initialize = require("../passport-config");
 
-var flash = require("express-flash");
-
 // initialize(
 // 	passport,
 // 	username => {
@@ -21,7 +19,6 @@ const LocalStrategy = require("passport-local").Strategy;
 passport.use(
 	new LocalStrategy(function (username, password, done) {
 		User.findOne({ username: username }, async (err, user) => {
-			
 			if (err) {
 				return done(err);
 			}
@@ -32,7 +29,6 @@ passport.use(
 			}
 
 			try {
-				
 				if (await bcrypt.compare(password, user.password)) {
 					return done(null, user);
 				} else {
@@ -53,17 +49,14 @@ Router.route("/login").post(
 		failureRedirect: "/login",
 		failureFlash: true,
 	}),
-	//  (req, res) =>{
-	// 	//req.session.isAuth = true;
-		
-	//  req.flash("info", "Flash Message Added");
-	
-	// }
+	(req, res) => {
+		req.flash("error", "Invalid");
+	}
 );
 
-Router.get("/logout", (req, res) => {
+Router.route("/logout").get((req, res) => {
 	req.logout();
-	res.redirect(req.headers.referer);
+	res.redirect("/");
 });
 
 module.exports = Router;

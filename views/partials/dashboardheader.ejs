@@ -72,11 +72,12 @@
 					>
 						<span
 							class="avatar avatar-sm"
-							style="background-image: url(<%=profileImg%>)"
+							style="background-image: url()"
 						></span>
+					
 						<div class="d-none d-xl-block ps-2">
-							<div><%=name.surname%> <%=  name.othernames %></div>
-							<div class="mt-1 small text-muted">UI Designer</div>
+							<div><%=user.surname%> <%=  user.othernames %></div>
+							<div class="mt-1 small text-muted"><%=  user.role %></div>
 						</div>
 					</a>
 					<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

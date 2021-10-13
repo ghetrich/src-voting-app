@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
+const cors = require("cors");
 const session = require("express-session");
 const express_layout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
@@ -12,9 +13,11 @@ const app = express();
 const path = require("path");
 
 require("dotenv").config();
-// require("./config/passport")(passport);
-
+require("./config/passport")(passport);
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 app.use(cookieParser("secret"));
 
 app.use(express.static("adminClient"));
@@ -34,13 +37,10 @@ app.set("view engine", "ejs");
 
 app.use(
 	session({
-		secret: "keyboard",
+		secret: "keyboard cat",
 		resave: false,
-		saveUninitialized: true,
+		saveUninitialized: false,
 		store: new MongoStore({ mongooseConnection: mongoose.connection }),
-		cookie: {
-			maxAge: 1000 * 60 * 60 * 24,
-		},
 	})
 );
 
@@ -49,10 +49,6 @@ app.use(passport.session());
 
 app.use(flash());
 
-app.use("/register", require("./routes/register"));
-
-app.use("/auth", require("./routes/auth"));
-app.use("/user", require("./routes/user"));
 mongoose
 	.connect(
 		"mongodb+srv://ghet:IT128411@cluster0.ayjeb.mongodb.net/gctu-src-voting-app?retryWrites=true&w=majority",
@@ -69,18 +65,26 @@ mongoose
 		});
 	});
 
-app.get("/", (req, res) => {
+app.use("/register", require("./routes/register"));
+
+app.use("/auth", require("./routes/auth"));
+app.use("/user", require("./routes/user"));
+
+app.get("/", ensureGuest, (req, res) => {
 	res.render(__dirname + "/views/pages/index.ejs", {
 		layout: "./Layouts/layout",
 	});
 });
 
-app.get("/login",  (req, res) => {
+app.get("/login", ensureGuest, (req, res) => {
 	res.render(__dirname + "/views/pages/login.ejs", {
 		layout: "./Layouts/layout",
 	});
 });
 
-app.get("/dashboard", (req, res) => {
-	return res.send("DASHBOARD PAGE");
+app.get("/dashboard", ensureAuth, (req, res) => {
+	res.render(__dirname + "/views/pages/dashboard.ejs", {
+		layout: "./Layouts/layout",
+		user: req.user,
+	});
 });
