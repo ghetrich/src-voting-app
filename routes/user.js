@@ -3,6 +3,7 @@ const User = require("../models/user");
 const restrictedTo = require("../middleware/restricted");
 const bcrypt = require("bcryptjs");
 
+
 Router.post("/new", restrictedTo(["admin"]), (req, res) => {
 	const { surname, othernames, role, username, password } = req.body;
 	const image = "http://localhost:3030/uploads/images/1.jpg";
@@ -48,7 +49,7 @@ Router.post("/new", restrictedTo(["admin"]), (req, res) => {
 		});
 });
 
-Router.get("/", restrictedTo(["admin"]), (req, res) => {
+Router.get("/", (req, res) => {
 	User.find({})
 		.select("-password")
 		.then(user => {

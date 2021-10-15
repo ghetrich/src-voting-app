@@ -70,6 +70,9 @@ app.use("/register", require("./routes/register"));
 app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user"));
 
+
+app.use("/route", require("./adminClient/routes/base"));
+
 app.get("/", ensureGuest, (req, res) => {
 	res.render(__dirname + "/views/pages/index.ejs", {
 		layout: "./Layouts/layout",
@@ -82,9 +85,4 @@ app.get("/login", ensureGuest, (req, res) => {
 	});
 });
 
-app.get("/dashboard", ensureAuth, (req, res) => {
-	res.render(__dirname + "/views/pages/dashboard.ejs", {
-		layout: "./Layouts/layout",
-		user: req.user,
-	});
-});
+

@@ -45,7 +45,7 @@ passport.use(
 
 Router.route("/login").post(
 	passport.authenticate("local", {
-		successRedirect: "/dashboard",
+		successRedirect: "/route/dashboard",
 		failureRedirect: "/login",
 		failureFlash: true,
 	}),

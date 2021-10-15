@@ -10,7 +10,11 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<h1
-				class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3"
+				class="
+					navbar-brand navbar-brand-autodark
+					d-none-navbar-horizontal
+					pe-0 pe-md-3
+				"
 			>
 				<a href=".">
 					<img
@@ -72,12 +76,12 @@
 					>
 						<span
 							class="avatar avatar-sm"
-							style="background-image: url()"
+							style="background-image: url(<%=user.image%>)"
 						></span>
-					
+
 						<div class="d-none d-xl-block ps-2">
-							<div><%=user.surname%> <%=  user.othernames %></div>
-							<div class="mt-1 small text-muted"><%=  user.role %></div>
+							<div><%=user.surname%> <%= user.othernames %></div>
+							<div class="mt-1 small text-muted"><%= user.role %></div>
 						</div>
 					</a>
 					<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -391,7 +395,7 @@
 										/>
 									</svg>
 								</span>
-								<span class="nav-link-title"> Extra </span>
+								<span class="nav-link-title"> Accounts </span>
 							</a>
 							<div class="dropdown-menu">
 								<a class="dropdown-item" href="./activity.html">
@@ -406,10 +410,10 @@
 								<a class="dropdown-item" href="./search-results.html">
 									Search results
 								</a>
-								<a class="dropdown-item" href="./pricing.html">
-									Pricing cards
+								<a class="dropdown-item" href="/route/register">
+									Register
 								</a>
-								<a class="dropdown-item" href="./users.html"> Users </a>
+								<a class="dropdown-item" href="/route/users"> Users </a>
 								<a class="dropdown-item" href="./license.html">
 									License
 								</a>
@@ -581,7 +585,11 @@
 						</li>
 					</ul>
 					<div
-						class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last"
+						class="
+							my-2 my-md-0
+							flex-grow-1 flex-md-grow-0
+							order-first order-md-last
+						"
 					>
 						<form action="." method="get">
 							<div class="input-icon">
