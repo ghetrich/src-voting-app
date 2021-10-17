@@ -31,6 +31,8 @@ app.use(
 	express.static(__dirname + "/adminClient/public/dist/static")
 );
 
+app.use("/uploads", express.static("./uploads"));
+
 app.use(express_layout);
 app.set("layout", "./layouts/layout");
 app.set("view engine", "ejs");
@@ -69,6 +71,7 @@ app.use("/register", require("./routes/register"));
 
 app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user"));
+app.use("/elections", require("./routes/election"));
 
 
 app.use("/route", require("./adminClient/routes/base"));

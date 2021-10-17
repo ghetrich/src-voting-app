@@ -7,13 +7,14 @@ const userSchema = new Schema({
 	othernames: { type: String, required: true, trim: true },
 	username: { type: String, required: true, trim: true, unique: true },
 	password: { type: String, required: true, trim: true },
+	phone: { type: String, required: true, trim: true},
 	tokenVersion: { type: Number, default: 0 },
 	image: { type: String },
 	role: {
 		type: String,
 
 		trim: true,
-		enum: ["admin", "candidate", "observer"],
+		enum: ["Admin", "Candidate", "Observer"],
 	},
 	createdAt: { type: Date, default: Date.now() },
 });

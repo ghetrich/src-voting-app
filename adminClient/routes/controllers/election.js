@@ -2,16 +2,14 @@ const axios = require("axios");
 const ROLES = require("../../../roles");
 const url = process.env.BASE_URL_DEV;
 module.exports = {
-    
-    loadUsers: async (req, res, next) => {
-        
+	loadElections: async (req, res, next) => {
 		try {
-			const users = await axios.get(`${url}/user`);
-		
-			res.render("../views/pages/users.ejs", {
+			const elections = await axios.get(`${url}/elections`);
+
+			res.render("../views/pages/elections.ejs", {
 				layout: "./Layouts/layout",
 				user: req.user,
-				users: users.data,
+				elections: elections.data,
 				roles: ROLES.ROLES,
 				BASE_URL: url,
 			});

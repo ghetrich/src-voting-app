@@ -1,7 +1,7 @@
 const express = require('express');
 const { ensureAuth, ensureGuest } = require("../../middleware/auth");
 const {loadUsers, createUser} = require("./controllers/user")
-
+const { loadElections } = require("./controllers/election");
 const app = express();
 
 app.get("/dashboard", ensureAuth, (req, res) => {
@@ -14,6 +14,7 @@ app.get("/dashboard", ensureAuth, (req, res) => {
 app.get("/users", ensureAuth, loadUsers);
 
 app.get("/users/new", ensureAuth, createUser);
+app.get("/elections/new", ensureAuth, loadElections);
 
 
 module.exports = app

@@ -14,4 +14,12 @@ module.exports = {
 			return next();
 		}
 	},
+
+	restricted: roles => (req, res, next) => {
+		if (req.isAuthenticated()) {
+			res.redirect("/route/dashboard");
+		} else {
+			return next();
+		}
+	},
 };
