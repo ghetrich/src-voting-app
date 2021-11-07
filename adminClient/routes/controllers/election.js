@@ -7,7 +7,7 @@ const url = process.env.BASE_URL_DEV;
 module.exports = {
 	loadElections: async (req, res, next) => {
 		try {
-			const elections = await axios.get(`${url}/elections`);
+			const elections = await axios.get(`/elections`);
 			console.log(elections.data);
 			res.render("../views/pages/elections.ejs", {
 				layout: "./Layouts/layout",
@@ -37,7 +37,7 @@ module.exports = {
 	viewElection: async (req, res, next) => {
 		const electionId = req.params.electionId;
 		try {
-			const election = await axios.get(`${url}/elections/${electionId}`);
+			const election = await axios.get(`/elections/${electionId}`);
 			
 		
 			res.render("../views/pages/singleElection.ejs", {
@@ -59,8 +59,8 @@ module.exports = {
 	createPosition: async (req, res, next) => {
 	const electionId = req.params.electionId;
 		try {
-			const election = await axios.get(`${url}/elections/${electionId}`);
-			const candidates = await axios.get(`${url}/user/candidates`);
+			const election = await axios.get(`/elections/${electionId}`);
+			const candidates = await axios.get(`/user/candidates`);
 				console.log(candidates.data);
 			res.render("../views/pages/newPosition.ejs", {
 				layout: "./Layouts/layout",
