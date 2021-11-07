@@ -6,12 +6,13 @@ const sendMail = require("../mailService");
 const { uploadProfile } = require("../middleware/upload");
 const restrictedTo = require("../middleware/restricted");
 const bcrypt = require("bcryptjs");
+const {Candidate} = require("../roles")
 
 Router.post("/new", uploadProfile.single("image"), (req, res) => {
-	const { surname, othernames, role, username, phone } = req.body;
+	const { surname, othernames, role, username, phone, about, campus } = req.body;
 	console.log(req.body);
 	let image = "uploads/images/1.jpg";
-	if (!surname || !othernames || !role || !username || !phone) {
+	if (!surname || !othernames || !role || !username || !phone || !about || !campus) {
 		return res.status(400).send({
 			error: "Please enter all fields",
 		});
@@ -37,6 +38,8 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 				username,
 				password,
 				phone,
+				about,
+				campus,
 				image,
 			});
 
@@ -75,6 +78,17 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 
 Router.get("/", (req, res) => {
 	User.find({})
+		.select("-password")
+		.then(user => {
+			return res.status(200).send(user);
+		})
+		.catch(err => {
+			return res.status(500).send(err);
+		});
+});
+
+Router.get("/candidates", (req, res) => {
+	User.find({ role: Candidate })
 		.select("-password")
 		.then(user => {
 			return res.status(200).send(user);

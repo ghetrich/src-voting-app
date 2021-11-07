@@ -1,0 +1,649 @@
+<%- include('../partials/dashboardheader.ejs') %>
+<div class="content">
+	<div class="container-xl">
+		<!-- Page title -->
+		<div class="page-header d-print-none">
+			<div class="row align-items-center">
+				<div class="col">
+					<h2 class="page-title"><%=election.header%></h2>
+					<div class="text-muted mt-1">
+						<%= moment(election.createdAt).format('LLLL') %>
+					</div>
+				</div>
+                <%if(election.positions.length > 0){%>
+                <div class="col-auto ms-auto d-print-none">
+                  <div class="d-flex">
+                    
+                    <a href="/route/position/new/<%=election._id%>" class="btn btn-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                      Create new position
+                    </a>
+                  </div>
+                </div>
+                <%}%>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6 col-lg-4">
+				<div class="col-12">
+					<div class="card mb-3">
+						<div class="card-body">
+							<p><%=election.about%></p>
+						</div>
+						<!-- Card footer -->
+						<div class="card-footer">
+							<div class="row align-items-center">
+								<div class="col-auto">
+									<!-- <a href="#">More information</a> -->
+								</div>
+								<%if(!election.isForcedClose){%>
+								<a
+									href="#"
+									id="force_close_trigger"
+									data-bs-toggle="modal"
+									data-bs-target="#modal_force_close"
+								>
+								</a>
+								<div class="col-auto ms-auto">
+									<label class="form-check form-switch m-0">
+										Force Close
+										<input
+											class="form-check-input position-static"
+											type="checkbox"
+											id="forceClose"
+                                             <% if ( !(new Date(election.startsAt) < new Date() && new Date() <  new Date(election.endsAt)) || election.isForcedClose ){%> disabled <%}%> 
+										/>
+									</label>
+								</div>
+								<%}%>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="alert alert-danger mb-3">
+					All icons come from the Tabler Icons set and are MIT-licensed.
+					Visit
+				</div>
+				<div class="col-12">
+					<div class="card mb-3">
+						<div class="card-header">
+							<h3 class="card-title">Configuration</h3>
+							<div class="card-actions">
+                                
+								<a
+									href="#"
+									data-bs-toggle="modal"
+									data-bs-target="#modal_edit_election"
+								>
+									Edit configuration<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="icon ms-1"
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										stroke-width="2"
+										stroke="currentColor"
+										fill="none"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<path
+											stroke="none"
+											d="M0 0h24v24H0z"
+											fill="none"
+										/>
+										<path
+											d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"
+										/>
+										<path
+											d="M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"
+										/>
+										<line x1="16" y1="5" x2="19" y2="8" />
+									</svg>
+								</a>
+                              
+							</div>
+						</div>
+						<div class="card-body">
+							<dl class="row">
+								<dt class="col-5">Open:</dt>
+								<dd class="col-7">
+									<%=moment(election.startsAt).format('LLLL')%>
+								</dd>
+								<dt class="col-5">Close:</dt>
+								<dd class="col-7">
+									<%=moment(election.endsAt).format('LLLL')%>
+								</dd>
+								<dt class="col-5">Positions:</dt>
+								<dd class="col-7"><%=election.positions.length%></dd>
+								<dt class="col-5">Status:</dt>
+								<dd class="col-7">Closed</dd>
+								<dt class="col-5">Time Remaining:</dt>
+								<dd class="col-7">46.113.11.3</dd>
+							</dl>
+						</div>
+					</div>
+				</div>
+				<%if(election.createdBy){%>
+				<div class="col-12">
+					<a class="card card-link" href="#">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-auto">
+									<span
+										class="avatar rounded"
+										style="
+											background-image: url(/<%=election.createdBy.image%>);
+										"
+									></span>
+								</div>
+								<div class="col">
+									<div class="font-weight-medium">Configured by</div>
+									<div class="text-muted">
+										<%=election.createdBy.surname%>
+										<%=election.createdBy.othernames%>
+									</div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<%}%>
+			</div>
+
+			<div class="col-sm-6 col-lg-5">
+				<div class="card">
+					<div class="empty">
+						<div class="empty-img">
+							<img
+								src="/static/illustrations/undraw_quitting_time_dm8t.svg"
+								height="128"
+								alt=""
+							/>
+						</div>
+						<p class="empty-title">No Position Created</p>
+						<p class="empty-subtitle text-muted">
+							Try adjusting your search or filter to find what you're
+							looking for.
+						</p>
+						<div class="empty-action">
+							<a href="/route/position/new/<%=election._id%>"
+									 class="btn btn-primary" >
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									class="icon"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									stroke-width="2"
+									stroke="currentColor"
+									fill="none"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+									<line x1="12" y1="5" x2="12" y2="19" />
+									<line x1="5" y1="12" x2="19" y2="12" />
+								</svg>
+
+								Create new position
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	class="modal modal-blur fade"
+	id="modal_force_close"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button
+				type="button"
+				class="btn-close"
+				data-bs-dismiss="modal"
+				aria-label="Close"
+			></button>
+			<div class="modal-status bg-danger"></div>
+			<div class="modal-body text-center py-4">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon mb-2 text-danger icon-lg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					stroke-width="2"
+					stroke="currentColor"
+					fill="none"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<path d="M12 9v2m0 4v.01" />
+					<path
+						d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"
+					/>
+				</svg>
+				<h3>Are you sure?</h3>
+				<div class="text-muted">
+					Do you really want to manually close this election? This cannot
+					be undone.
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<a
+								href="#"
+								class="btn btn-white w-100"
+								data-bs-dismiss="modal"
+							>
+								Cancel
+							</a>
+						</div>
+						<div class="col">
+							<a href="#" class="btn btn-danger w-100"> Yes, Close </a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	class="modal modal-blur fade"
+	id="modal_edit_election"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div
+		class="
+			modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable
+		"
+		role="document"
+	>
+		<form id="electionForm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Election</h5>
+					<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="modal"
+						aria-label="Close"
+					></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label class="form-label">Heading</label>
+						<input
+							type="text"
+							class="form-control"
+							id="header"
+							placeholder="Enter election heading"
+                            value="<%=election.header%>"
+                            <% if (new Date(election.startsAt) < new Date()){%>disabled<% }%>
+						/>
+					</div>
+
+					<div>
+						<label class="form-label">Description</label>
+						<textarea class="form-control" id="about" rows="3" <% if (new Date(election.startsAt) < new Date()){%>disabled<% }%> ><%=election.about%></textarea>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group mb-3 row">
+								<label class="form-label col-3 col-form-label"
+									>Start Date</label
+								>
+
+								<div class="col">
+									<div class="input-icon mb-2">
+										<input
+											class="form-control"
+											placeholder="Select a date"
+											id="datepicker-start"
+											value="2021-11-02"
+
+                                            <% if (new Date(election.startsAt) < new Date()){%>disabled<% }%>
+
+										/>
+										<span class="input-icon-addon"
+											><svg
+												xmlns="http://www.w3.org/2000/svg"
+												class="icon"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												stroke-width="2"
+												stroke="currentColor"
+												fill="none"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											>
+												<path
+													stroke="none"
+													d="M0 0h24v24H0z"
+													fill="none"
+												/>
+												<rect
+													x="4"
+													y="5"
+													width="16"
+													height="16"
+													rx="2"
+												/>
+												<line x1="16" y1="3" x2="16" y2="7" />
+												<line x1="8" y1="3" x2="8" y2="7" />
+												<line x1="4" y1="11" x2="20" y2="11" />
+												<line x1="11" y1="15" x2="12" y2="15" />
+												<line x1="12" y1="15" x2="12" y2="18" />
+											</svg>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="form-group mb-3 row">
+								<label class="form-label col-3 col-form-label"
+									>Start Time</label
+								>
+
+								<div class="col">
+									<div class="row g-2">
+										<div class="col-5">
+											<select
+												name="start_time[hour]"
+												class="form-select"
+												id="start_time_hrs"
+                                                <% if (new Date(election.startsAt) < new Date()){%>disabled<% }%>
+											>
+												<%-include('../partials/time_options_hrs.ejs')%>
+											</select>
+										</div>
+										<div class="col-3">
+											<select
+												name="start_time[minutes]"
+												class="form-select"
+												id="start_time_min"
+                                                <% if (new Date(election.startsAt) < new Date()){%>disabled<% }%>
+											>
+												<%-include('../partials/time_options.ejs')%>
+											</select>
+										</div>
+										<div class="col-4">
+											<select
+												name="start_time[seconds]"
+												class="form-select"
+												id="start_time_sec"
+                                                <% if (new Date(election.startsAt) < new Date()){%>disabled<% }%>
+											>
+												<%-include('../partials/time_options.ejs')%>
+											</select>
+										</div>
+									</div>
+									<small class="form-hint mt-2"
+										>Lorem ipsum dolor sit amet consectetur
+										adipisicing.</small
+									>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group mb-3 row">
+								<label class="form-label col-3 col-form-label"
+									>End Date</label
+								>
+
+								<div class="col">
+									<div class="input-icon mb-2">
+										<input
+											class="form-control"
+											placeholder="Select a date"
+											id="datepicker-end"
+											value="2021-11-02"
+										/>
+										<span class="input-icon-addon"
+											><svg
+												xmlns="http://www.w3.org/2000/svg"
+												class="icon"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												stroke-width="2"
+												stroke="currentColor"
+												fill="none"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											>
+												<path
+													stroke="none"
+													d="M0 0h24v24H0z"
+													fill="none"
+												/>
+												<rect
+													x="4"
+													y="5"
+													width="16"
+													height="16"
+													rx="2"
+												/>
+												<line x1="16" y1="3" x2="16" y2="7" />
+												<line x1="8" y1="3" x2="8" y2="7" />
+												<line x1="4" y1="11" x2="20" y2="11" />
+												<line x1="11" y1="15" x2="12" y2="15" />
+												<line x1="12" y1="15" x2="12" y2="18" />
+											</svg>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="form-group mb-3 row">
+								<label class="form-label col-3 col-form-label"
+									>End Time</label
+								>
+
+								<div class="col">
+									<div class="row g-2">
+										<div class="col-5">
+											<select
+												name="end_time[hour]"
+												class="form-select"
+												id="end_time_hrs"
+											>
+												<%-include('../partials/time_options_hrs.ejs')%>
+											</select>
+										</div>
+										<div class="col-3">
+											<select
+												name="end_time[minutes]"
+												class="form-select"
+												id="end_time_min"
+											>
+												<%-include('../partials/time_options.ejs')%>
+											</select>
+										</div>
+										<div class="col-4">
+											<select
+												name="end_time[seconds]"
+												class="form-select"
+												id="end_time_sec"
+											>
+												<%-include('../partials/time_options.ejs')%>
+											</select>
+										</div>
+									</div>
+									<small class="form-hint mt-2"
+										>Lorem ipsum dolor sit amet consectetur
+										adipisicing.</small
+									>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button
+						type="button"
+						class="btn me-auto"
+						data-bs-dismiss="modal"
+					>
+						Close
+					</button>
+					<button
+						type="submit"
+						class="btn btn-primary"
+						form="electionForm"
+					>
+						Save Changes
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<div class="modal modal-blur fade" id="modal_new_position" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create New Position</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="positionForm">
+<div class="form-group mb-3 row">
+								<label class="form-label col-3 col-form-label"
+									>Position</label
+								>
+								<div class="col">
+									<input
+										type="text"
+										class="form-control"
+										aria-describedby="emailHelp"
+										placeholder="What's the position"
+                                        id="position"
+									/>
+									<small class="form-hint"
+										>We'll never share your email with anyone
+										else.</small
+									>
+								</div>
+							</div>
+							<div class="form-group mb-3 row">
+								<label class="form-label col-3 col-form-label"
+									>Description</label
+								>
+
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label"
+											>Write briefly description about this position
+											<span class="form-label-description"
+												>10-100</span
+											></label
+										>
+										<textarea
+											class="form-control"
+											name="example-textarea-input"
+											rows="6"
+											placeholder="Content.."
+                                            id="about"
+										>
+ Start writing</textarea
+										>
+									</div>
+									<small class="form-hint">
+										Your password must be 8-20 characters long,
+										contain
+									</small>
+								</div>
+							</div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Libs JS -->
+<script src="./dist/libs/nouislider/distribute/nouislider.min.js"></script>
+<script src="./dist/libs/litepicker/dist/litepicker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js"></script>
+<script src="./dist/libs/choices.js/public/assets/scripts/choices.js"></script>
+
+<script>
+	// @formatter:off
+	document.addEventListener("DOMContentLoaded", function () {
+		window.Litepicker &&
+			new Litepicker({
+				element: document.getElementById("datepicker-start"),
+				buttonText: {
+					previousMonth:
+						'<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>',
+					nextMonth:
+						'<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>',
+				},
+			});
+	});
+	// @formatter:on
+</script>
+<script>
+	// @formatter:off
+	document.addEventListener("DOMContentLoaded", function () {
+		window.Litepicker &&
+			new Litepicker({
+				element: document.getElementById("datepicker-end"),
+				buttonText: {
+					previousMonth:
+						'<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>',
+					nextMonth:
+						'<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>',
+				},
+			});
+	});
+	// @formatter:on
+</script>
+
+<script type="text/javascript">
+	const forceCloseCheck = document.getElementById("forceClose");
+	const editElectionForm = document.getElementById("electionForm");
+
+	forceCloseCheck.addEventListener("change", e => {
+		if (e.target.checked) {
+			document.getElementById("force_close_trigger").click();
+		}
+	});
+
+	editElectionForm.addEventListener("submit", async e => {
+		e.preventDefault();
+
+		alert("please");
+	});
+</script>

@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 const positionSchema = new Schema({
 	election: { type: mongoose.Schema.Types.ObjectId, ref: "Election" },
 	position: { type: String, required: true, trim: true },
+	isGeneral: { type: Boolean, default: true },
+	allowedVoters: [{ type: mongoose.Schema.Types.ObjectId, ref: "Register" }],
 	about: { type: String, required: true, trim: true },
 	voters: [{ type: mongoose.Schema.Types.ObjectId, ref: "Register" }],
 	candidates: [
@@ -12,7 +14,6 @@ const positionSchema = new Schema({
 			candidate: {
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "User",
-				unique: true,
 			},
 			about: { type: String, required: true, trim: true },
 			campus: { type: String, required: true, trim: true },

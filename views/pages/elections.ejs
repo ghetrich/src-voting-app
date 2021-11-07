@@ -1,10 +1,272 @@
-<%- include('../partials/dashboardheader.ejs') %>
+<%- include('../partials/dashboardheader.ejs') %> <%if(elections.length > 0){%>
 
-<%if(elections.length > 0){%>
+<div class="content">
+	<div class="container-xl">
+		<!-- Page title -->
+		<div class="page-header d-print-none">
+			<div class="row align-items-center">
+				<div class="col">
+					<h2 class="page-title">All Elections</h2>
+					<div class="text-muted mt-1">
+						About <%=elections.length%> elections
+					</div>
+				</div>
+				<div class="col-auto ms-auto">
+					<div class="btn-list">
+						<a
+							href="/route/elections/new"
+							class="btn btn-primary d-none d-sm-inline-block"
+							
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="icon"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								fill="none"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<line x1="12" y1="5" x2="12" y2="19" />
+								<line x1="5" y1="12" x2="19" y2="12" />
+							</svg>
+							Create new election
+						</a>
+						<a
+							href="/route/elections/new"
+							class="btn btn-primary d-sm-none btn-icon"
+							data-bs-toggle="modal"
+							data-bs-target="#modal-report"
+							aria-label="Create new report"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="icon"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								fill="none"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<line x1="12" y1="5" x2="12" y2="19" />
+								<line x1="5" y1="12" x2="19" y2="12" />
+							</svg>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-3">
+				<form action="" method="get">
+					<div class="subheader mb-2">Category</div>
+					<div class="list-group list-group-transparent mb-3">
+						<a
+							class="
+								list-group-item list-group-item-action
+								d-flex
+								align-items-center
+								active
+							"
+							href="#"
+						>
+							General
+							<small class="text-muted ms-auto"
+								><%=elections.length%></small
+							>
+						</a>
+						<a
+							class="
+								list-group-item list-group-item-action
+								d-flex
+								align-items-center
+							"
+							href="#"
+						>
+							Pending
+							<small class="text-muted ms-auto">149</small>
+						</a>
+						<a
+							class="
+								list-group-item list-group-item-action
+								d-flex
+								align-items-center
+							"
+							href="#"
+						>
+							Closed
+							<small class="text-muted ms-auto">88</small>
+						</a>
+						<a
+							class="
+								list-group-item list-group-item-action
+								d-flex
+								align-items-center
+							"
+							href="#"
+						>
+							Others
+							<small class="text-muted ms-auto">54</small>
+						</a>
+					</div>
+				</form>
+			</div>
+			<div class="col-9">
+				<div class="row">
+					<%for(var election of elections){%>
+					<div class="col-sm-6 col-lg-4">
+						<div class="card card-sm mb-3">
+							<a href="elections/single/<%=election._id%>" class="d-block"
+								><img
+									src="/<%=election.banner%>"
+									class="card-img-top"
+									height="150px"
+							/></a>
+							<div class="card-body">
+								<div class="d-flex align-items-center">
+									<span
+										class="avatar me-3 rounded"
+										style="
+											background-image: url(./static/avatars/018f.jpg);
+										"
+									></span>
+									<div>
+										<div><a class="text-muted" href="elections/single/<%=election._id%>"><%=trunc(election.header, 23, '...')%></a></div>
+										<div class="text-muted">
+											<%=moment(election.createdAt).from()%>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<%}%>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
+<%}else{%> <%- include('../partials/noResultFound.ejs') %> <%}%>
 
+<div
+	class="modal modal-blur fade"
+	id="new-election"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Setup New Election</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<form id="electionForm">
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label">Surname</label>
+						<div class="col">
+							<input
+								type="text"
+								id="surname"
+								class="form-control"
+								aria-describedby="emailHelp"
+								placeholder="Enter surname"
+							/>
+							<small class="form-hint"
+								>We'll never share your email with anyone else.</small
+							>
+						</div>
+					</div>
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label"
+							>Othernames</label
+						>
+						<div class="col">
+							<input
+								id="othernames"
+								type="text"
+								class="form-control"
+								aria-describedby="emailHelp"
+								placeholder="Enter othernames"
+							/>
+							<small class="form-hint"
+								>We'll never share your email with anyone else.</small
+							>
+						</div>
+					</div>
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label"
+							>Username</label
+						>
+						<div class="col">
+							<input
+								type="email"
+								id="username"
+								class="form-control"
+								aria-describedby="emailHelp"
+								placeholder="Enter email"
+							/>
+							<small class="form-hint"
+								>We'll use your email address to send you vital
+								information. So, please enter a valid email
+								address</small
+							>
+						</div>
+					</div>
 
-<%}else{%>
-<%- include('../partials/noResultFound.ejs') %>
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label">Phone</label>
+						<div class="col">
+							<input
+								type="tel"
+								id="phone"
+								class="form-control"
+								placeholder="Password"
+							/>
+							<small class="form-hint">
+								Your password must be 8-20 characters long, contain
+								letters and numbers, and must not contain spaces,
+								special characters, or emoji.
+							</small>
+						</div>
+					</div>
 
-<%}%>
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label"
+							>Profile Picture</label
+						>
+						<div class="col">
+							<input type="file" class="form-control" id="image" />
+							<small class="form-hint">
+								We'll like you to put a face to this account.
+							</small>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">
+					Close
+				</button>
+				<button type="submit" class="btn btn-primary" form="electionForm">
+					Save Election
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

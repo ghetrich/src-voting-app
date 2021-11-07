@@ -7,7 +7,9 @@ const userSchema = new Schema({
 	othernames: { type: String, required: true, trim: true },
 	username: { type: String, required: true, trim: true, unique: true },
 	password: { type: String, required: true, trim: true },
-	phone: { type: String, required: true, trim: true},
+	phone: { type: String, required: true, trim: true },
+	about: { type: String, required: true, trim: true },
+	campus: { type: String, required: true, trim: true },
 	tokenVersion: { type: Number, default: 0 },
 	image: { type: String },
 	role: {

@@ -255,7 +255,7 @@
 	role="dialog"
 	aria-hidden="true"
 >
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-centered modal-scrollable" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">Add a new user</h5>
@@ -337,6 +337,39 @@
 						</div>
 					</div>
 					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label"
+							>Campus</label
+						>
+						<div class="col">
+							 <select type="text" class="form-select" placeholder="Select a date" id="campus" value="">
+                            <option value="Takoradi">Takoradi</option>
+                            <option value="Accra">Accra</option>
+                            <option value="Ho">Ho</option>
+                            <option value="Kumasi">Kumasi</option>
+                          </select>
+							<small class="form-hint"
+								>We'll never share your email with anyone else.</small
+							>
+						</div>
+					</div>
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label"
+							>About</label
+						>
+						<div class="col">
+							<textarea
+											class="form-control"
+											name="example-textarea-input"
+											rows="3"
+											placeholder="Write about this user"
+											id="about"
+										></textarea>
+							<small class="form-hint"
+								>We'll never share your email with anyone else.</small
+							>
+						</div>
+					</div>
+					<div class="form-group mb-3 row">
 						<label class="form-label col-3 col-form-label">Role</label>
 						<div class="col">
 							<select class="form-select" id="role">
@@ -372,7 +405,32 @@
 		</div>
 	</div>
 </div>
-
+ <!-- Libs JS -->
+  <script src="./dist/libs/nouislider/distribute/nouislider.min.js"></script>
+  <script src="./dist/libs/litepicker/dist/litepicker.js"></script>
+  <script src="./dist/libs/choices.js/public/assets/scripts/choices.js"></script>
+  <!-- Tabler Core -->
+  <script src="./dist/js/tabler.min.js"></script>
+ <script>
+    // @formatter:off
+    document.addEventListener("DOMContentLoaded", function () {
+    	var el;
+    	window.Choices && (new Choices(el = document.getElementById('campus'), {
+    		classNames: {
+    			containerInner: el.className,
+    			input: 'form-control',
+    			inputCloned: 'form-control-sm',
+    			listDropdown: 'dropdown-menu',
+    			itemChoice: 'dropdown-item',
+    			activeState: 'show',
+    			selectedState: 'active',
+    		},
+    		shouldSort: false,
+    		searchEnabled: false,
+    	}));
+    });
+    // @formatter:on
+  </script>
 <script type="text/javascript">
 	const userForm = document.getElementById("userForm");
 
@@ -384,6 +442,8 @@
 		const username = document.getElementById("username");
 		const phone = document.getElementById("phone");
 		const role = document.getElementById("role");
+		const campus = document.getElementById("campus");
+		const about = document.getElementById("about");
 		const image = document.getElementById("image");
 
 		let data = new FormData();
@@ -393,6 +453,8 @@
 		data.append("username", username.value);
 		data.append("phone", phone.value);
 		data.append("role", role.value);
+		data.append("campus", campus.value)
+		data.append("about", about.value)
 		data.append("image", image.files[0]);
 
 		const saveUser = await fetch(`<%=BASE_URL %>/user/new`, {

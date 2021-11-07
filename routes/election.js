@@ -7,20 +7,26 @@ const { uploadBanner } = require("../middleware/upload");
 
 const app = express();
 app.post("/new", uploadBanner.single("banner"), (req, res) => {
-	const { header, about, isGeneral, allowedVoters, startsAt, endsAt } =
-		req.body;
+	
+	const {
+		header,
+		about,
+		startsAt,
+		endsAt,
+		positions,
+	} = req.body;
 
 	let banner;
 
-	if (!header || !about || !isGeneral || !startsAt || !endsAt) {
+	if (!header || !about  || !startsAt || !endsAt) {
 		return res.status(400).send({ error: "Bad Request" });
 	}
 
-	if (isGeneral == "false" || (isGeneral == false && !allowedVoters)) {
-		return res.status(400).send({
-			error: "If this election is not a general election, please provide paticipants",
-		});
-	}
+	// if (isGeneral == "false" || (isGeneral == false && !allowedVoters)) {
+	// 	return res.status(400).send({
+	// 		error: "If this election is not a general election, please provide paticipants",
+	// 	});
+	// }
 
 	if (req.file) {
 		banner = req.file.path;
@@ -33,27 +39,39 @@ app.post("/new", uploadBanner.single("banner"), (req, res) => {
 	const newElection = new Election({
 		header,
 		about,
-		isGeneral,
-		allowedVoters,
 		startsAt,
 		endsAt,
 		banner,
+		positions,
+		createdBy: req.user._id,
 	});
 
 	newElection
 		.save()
 		.then(result => {
-			return res.status(202).send(result);
+			return res.status(200).send(result);
 		})
 		.catch(err => {
-			log.error(err);
+			console.log(err);
 			return res.status(500).send(err);
 		});
 });
 
-app.get("/", ensureAuth, (req, res) => {
+app.get("/", (req, res) => {
 	Election.find({})
 		.populate("positions")
+		.then(result => {
+			return res.status(200).send(result);
+		})
+		.catch(err => {
+			return res.status(500).send(err);
+		});
+});
+
+app.get("/:electionId", (req, res) => {
+	const electionId = req.params.electionId
+	Election.findById(electionId)
+		.populate(["positions","createdBy"])
 		.then(result => {
 			return res.status(200).send(result);
 		})
@@ -173,7 +191,5 @@ app.put("/:electionId/position/:positionId/vote/:candidateId", (req, res) => {
 			return res.status(500).send({ error: "Something happend" });
 		});
 });
-
-
 
 module.exports = app;

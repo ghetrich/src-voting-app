@@ -28,7 +28,7 @@ app.use("/img", express.static(__dirname + "/adminClient/public/dist/img"));
 app.use("/js", express.static(__dirname + "/adminClient/public/dist/js"));
 app.use(
 	"/static",
-	express.static(__dirname + "/adminClient/public/dist/static")
+	express.static(__dirname + "/adminClient/public/static")
 );
 
 app.use("/uploads", express.static("./uploads"));
