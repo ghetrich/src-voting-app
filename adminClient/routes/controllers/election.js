@@ -3,11 +3,11 @@ const ROLES = require("../../../roles");
 const moment = require("moment");
 const { time_assembler, time_options } = require("../../../utilities/timegen");
 const { trunc } = require("../../../utilities/trunc");
-const url = process.env.BASE_URL_DEV;
+const url = process.env.BASE_URL_PRO;
 module.exports = {
 	loadElections: async (req, res, next) => {
 		try {
-			const elections = await axios.get(`/elections`);
+			const elections = await axios.get(`${url}/elections`);
 			console.log(elections.data);
 			res.render("../views/pages/elections.ejs", {
 				layout: "./Layouts/layout",
@@ -37,7 +37,7 @@ module.exports = {
 	viewElection: async (req, res, next) => {
 		const electionId = req.params.electionId;
 		try {
-			const election = await axios.get(`/elections/${electionId}`);
+			const election = await axios.get(`${url}/elections/${electionId}`);
 			
 		
 			res.render("../views/pages/singleElection.ejs", {
@@ -59,8 +59,8 @@ module.exports = {
 	createPosition: async (req, res, next) => {
 	const electionId = req.params.electionId;
 		try {
-			const election = await axios.get(`/elections/${electionId}`);
-			const candidates = await axios.get(`/user/candidates`);
+			const election = await axios.get(`${url}/elections/${electionId}`);
+			const candidates = await axios.get(`${url}/user/candidates`);
 				console.log(candidates.data);
 			res.render("../views/pages/newPosition.ejs", {
 				layout: "./Layouts/layout",
