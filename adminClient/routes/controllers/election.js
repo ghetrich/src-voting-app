@@ -3,7 +3,7 @@ const ROLES = require("../../../roles");
 const moment = require("moment");
 const { time_assembler, time_options } = require("../../../utilities/timegen");
 const { trunc } = require("../../../utilities/trunc");
-const url = process.env.BASE_URL_DEV;
+const url = process.env.BASE_URL;
 module.exports = {
 	loadElections: async (req, res, next) => {
 		try {

@@ -1,6 +1,6 @@
 const axios = require("axios");
 const moment = require("moment");
-const url = process.env.BASE_URL_DEV;
+const url = process.env.BASE_URL;
 module.exports = {
 	loadConfig: async (req, res, next) => {
 		try {

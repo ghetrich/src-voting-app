@@ -1,6 +1,6 @@
 const axios = require("axios");
 const ROLES = require("../../../roles");
-const url = process.env.BASE_URL_DEV;
+const url = process.env.BASE_URL;
 module.exports = {
     
     loadUsers: async (req, res, next) => {

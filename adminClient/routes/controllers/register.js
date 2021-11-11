@@ -1,5 +1,5 @@
 const axios = require("axios");
-const url = process.env.BASE_URL_DEV;
+const url = process.env.BASE_URL;
 const moment = require("moment");
 module.exports = {
 	loadVotersRegister: async (req, res, next) => {
