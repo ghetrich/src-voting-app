@@ -4,13 +4,18 @@ const Schema = mongoose.Schema
 
 const registerSchema = new Schema({
 	othernames: { type: String, required: true, trim: true },
-    surname: { type: String, required: true, trim: true },
-    email:{type: String, required: true, trim: true},
-    index: { type: String, required: true, trim: true, unique: true },
-    eligibility:{type:Number, required: true, trim: true},
-    campus: { type: String, required: true, trim: true },
-    voteCode: { type: String, required: true, trim: true },
-    createdAt:{type:Date, default: new Date()}
+	surname: { type: String, required: true, trim: true },
+	email: { type: String, required: true, trim: true },
+	index: { type: String, required: true, trim: true, unique: true },
+	level: { type: mongoose.Schema.Types.ObjectId, ref: "Level" },
+	eligibility: { type: Boolean, default: true },
+	image: { type: String, required: true, trim: true },
+	groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+	campus: { type: mongoose.Schema.Types.ObjectId, ref: "Campus" },
+	voteCode: { type: String, trim: true },
+	voteCodeExpiresAt: { type: Date },
+	createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+	createdAt: { type: Date, default: new Date() },
 });
 
 

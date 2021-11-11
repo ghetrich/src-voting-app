@@ -65,14 +65,20 @@ mongoose
 		app.listen(process.env.PORT || 3030, () => {
 			console.log("GCTU SRC Voting App listening on port 3030!");
 		});
-	});
+	}).catch((error) => {
+		console.error(error);
+	})
 
 app.use("/register", require("./routes/register"));
 
 app.use("/auth", require("./routes/auth"));
 app.use("/user", require("./routes/user"));
 app.use("/elections", require("./routes/election"));
-
+app.use("/position", require("./routes/position"));
+app.use("/register", require("./routes/register"));
+app.use("/campus", require("./routes/campus"));
+app.use("/level", require("./routes/level"));
+app.use("/group", require("./routes/group"));
 
 app.use("/route", require("./adminClient/routes/base"));
 

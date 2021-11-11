@@ -3,7 +3,7 @@ const ROLES = require("../../../roles");
 const moment = require("moment");
 const { time_assembler, time_options } = require("../../../utilities/timegen");
 const { trunc } = require("../../../utilities/trunc");
-const url = process.env.BASE_URL_PRO;
+const url = process.env.BASE_URL_DEV;
 module.exports = {
 	loadElections: async (req, res, next) => {
 		try {
@@ -17,6 +17,7 @@ module.exports = {
 				BASE_URL: url,
 				new_route: "/route/elections/new",
 				new_button_text: "Setup new election",
+				modal_target:"",
 				no_result_message:
 					"//Try adjusting your search or filter to find what you're looking for.",
 				moment,
@@ -61,13 +62,16 @@ module.exports = {
 		try {
 			const election = await axios.get(`${url}/elections/${electionId}`);
 			const candidates = await axios.get(`${url}/user/candidates`);
-				console.log(candidates.data);
+			const groups = await axios.get(`${url}/group`);
+				console.log(groups.data);
 			res.render("../views/pages/newPosition.ejs", {
 				layout: "./Layouts/layout",
 				user: req.user,
 				election: election.data,
 				candidates: candidates.data,
+				groups: groups.data,
 				BASE_URL: url,
+				moment
 			});
 		} catch (error) {
 			console.log(error);

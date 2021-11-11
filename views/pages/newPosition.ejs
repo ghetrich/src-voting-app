@@ -12,14 +12,13 @@
 			</div>
 		</div>
 		<form id="positionForm">
-		<div class="row row-cards">
-			<div class="col-md-6">
-				<div class="card">
-					<div class="card-header">
-						<h3 class="card-title">Basic Position Details</h3>
-					</div>
-					<div class="card-body">
-						
+			<div class="row row-cards">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">Basic Position Details</h3>
+						</div>
+						<div class="card-body">
 							<div class="form-group mb-3 row">
 								<label class="form-label col-3 col-form-label"
 									>Position</label
@@ -30,7 +29,7 @@
 										class="form-control"
 										aria-describedby="emailHelp"
 										placeholder="What's the position"
-                                        id="position"
+										id="position"
 									/>
 									<small class="form-hint"
 										>We'll never share your email with anyone
@@ -56,10 +55,8 @@
 											name="example-textarea-input"
 											rows="6"
 											placeholder="Start writing..."
-                                            id="about"
-										>
- </textarea
-										>
+											id="about"
+										></textarea>
 									</div>
 									<small class="form-hint">
 										Your password must be 8-20 characters long,
@@ -67,7 +64,7 @@
 									</small>
 								</div>
 							</div>
-                              <%if(candidates.length > 0){%>
+							<%if(candidates.length > 0){%>
 							<div class="card">
 								<div class="card-header">
 									<h3 class="card-title">Candidates</h3>
@@ -78,11 +75,17 @@
 								>
 									<div class="list-group-header sticky-top">A</div>
 
-                                    <%for(var candidate of candidates){%>
+									<%for(var candidate of candidates){%>
 									<div class="list-group-item">
 										<div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <input type="checkbox" name="amCandidate" value="<%= candidate._id%>" class="form-check-input"></div>
+											<div class="col-auto">
+												<input
+													type="checkbox"
+													name="amCandidate"
+													value="<%= candidate._id%>"
+													class="form-check-input"
+												/>
+											</div>
 											<div class="col-auto">
 												<a href="#">
 													<span
@@ -95,7 +98,9 @@
 											</div>
 											<div class="col text-truncate">
 												<a href="#" class="text-body d-block"
-													><%= candidate.othernames%> <%= candidate.surname%> ~ <%= candidate.campus%></a
+													><%= candidate.othernames%> <%=
+													candidate.surname%> ~ <%=
+													candidate.campus%></a
 												>
 												<div class="text-muted text-truncate mt-n1">
 													<%= candidate.about%>
@@ -103,23 +108,19 @@
 											</div>
 										</div>
 									</div>
-                                      <%}%>
+									<%}%>
 								</div>
 							</div>
-                              <%}else{%>
-                                Create a new candidate User
-                                <%}%>
-						
+							<%}else{%> Create a new candidate User <%}%>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="card">
-					<div class="card-header">
-						<h3 class="card-title">Addition Configuration</h3>
-					</div>
-					<div class="card-body">
-						
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+							<h3 class="card-title">Addition Configuration</h3>
+						</div>
+						<div class="card-body">
 							<div class="form-group row mb-3">
 								<label class="form-label col-3 col-form-label pt-0"
 									>Restricted</label
@@ -128,8 +129,8 @@
 									<label class="form-check">
 										<input
 											class="form-check-input"
-											type="checkbox"										
-                                            id="restricted"
+											type="checkbox"
+											id="restricted"
 										/>
 									</label>
 									<small class="form-hint"
@@ -139,10 +140,10 @@
 								</div>
 							</div>
 
-							   <%if(candidates.length > 0){%>
+							<%if(groups.length > 0){%>
 							<div class="card d-none" id="eligibleVoters">
 								<div class="card-header">
-									<h3 class="card-title">Eligible Voters</h3>
+									<h3 class="card-title">Vote Groups</h3>
 								</div>
 								<div
 									class="list-group list-group-flush overflow-auto"
@@ -150,48 +151,57 @@
 								>
 									<div class="list-group-header sticky-top">A</div>
 
-                                    <%for(var candidate of candidates){%>
+									<%for(var group of groups){%>
 									<div class="list-group-item">
 										<div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <input type="checkbox" name="amEligible" value="<%= candidate._id%>" class="form-check-input"></div>
 											<div class="col-auto">
-												<a href="#">
-													<span
-														class="avatar"
-														style="
-															background-image: url(/<%=candidate.image%>);
-														"
-													></span>
+												<input
+													type="checkbox"
+													name="eligibleGroup"
+													value="<%= group._id%>"
+													class="form-check-input"
+												/>
+											</div>
+											<div
+												class="col-auto avatar bg-indigo-lt"
+												data-demo-color
+											>
+												<a class="">
+													<span class="avatar" style=""
+														><%=
+														group.name.charAt(0).toUpperCase()%></span
+													>
 												</a>
 											</div>
 											<div class="col text-truncate">
 												<a href="#" class="text-body d-block"
-													><%= candidate.othernames%> <%= candidate.surname%> ~ <%= candidate.campus%></a
-												>
+													><%= group.name%>
+												</a>
 												<div class="text-muted text-truncate mt-n1">
-													<%= candidate.about%>
+													<%=
+													moment(group.createdAt).format("LL")%>
 												</div>
 											</div>
 										</div>
 									</div>
-                                      <%}%>
+									<%}%>
 								</div>
 							</div>
-                              <%}else{%>
-                                Create a new candidate User
-                                <%}%>
+							<%}else{%> Create a new voter group <%}%>
 
 							<div class="form-footer">
-								<button type="submit" form="positionForm" class="btn btn-primary">
+								<button
+									type="submit"
+									form="positionForm"
+									class="btn btn-primary"
+								>
 									Add Position
 								</button>
 							</div>
-						
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		</form>
 	</div>
 </div>
@@ -238,21 +248,18 @@
 	const restricted = document.getElementById("restricted");
 	const eligibleVoters = document.getElementById("eligibleVoters");
 
-	let eligibleVoterslist = []
-	let candidateslist = []
+	let allowedVoterGroups = [];
+	let candidateslist = [];
 
-	restricted.addEventListener("change", e=>{	
-			$("#eligibleVoters").toggleClass("d-none")
+	restricted.addEventListener("change", e => {
+		$("#eligibleVoters").toggleClass("d-none");
 
-			if (!e.target.checked) {
-			$.each($("input[name=amEligible]:checked"), function (){
+		if (!e.target.checked) {
+			$.each($("input[name=eligibleGroup]:checked"), function () {
 				$(this).click();
-				
-			})
-			}
-		
-	})
-
+			});
+		}
+	});
 
 	positionForm.addEventListener("submit", async e => {
 		e.preventDefault();
@@ -261,32 +268,41 @@
 
 		const about = document.getElementById("about");
 
-	
-		$.each($("input[name=amEligible]:checked"), function (){
-				eligibleVoterslist.push($(this).val());
-				
-			})
+		let isGeneral = true;
 
-		$.each($("input[name=amCandidate]:checked"), function (){
-				candidateslist.push($(this).val());
-				
-			})
+		if (restricted.checked) {
+			isGeneral = false;
+		}
 
+		$.each($("input[name=eligibleGroup]:checked"), function () {
+			allowedVoterGroups.push($(this).val());
+		});
 
-		console.log({ position:position.value, about:about.value, eligibleVoters: eligibleVoterslist, candidates: candidateslist });
-	
-		let data = new FormData();
+		$.each($("input[name=amCandidate]:checked"), function () {
+			candidateslist.push($(this).val());
+		});
 
-		// data.append("header", header.value);
-		// data.append("about", about.value);
-		// data.append("startsAt", start_dateTime);
-		// data.append("endsAt", end_dateTime);
-		// data.append("banner", banner.files[0]);
+		console.log({
+			position: position.value,
+			about: about.value,
+			eligibleVoters: allowedVoterGroups,
+			candidates: candidateslist,
+		});
 
-		// const saveElection = await fetch(`/elections/new`, {
-		// 	method: "POST",
-		// 	body: data,
-		// }).then(response => response.json());
-	
+		const savePosition = await fetch(`/position/new/<%=election._id%>`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				position: position.value,
+				about: about.value,
+				isGeneral,
+				allowedVoterGroups,
+				candidates: candidateslist,
+			}),
+		}).then(response => response.json());
+
+		console.log(savePosition.error);
 	});
 </script>

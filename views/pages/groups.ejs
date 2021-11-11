@@ -1,0 +1,197 @@
+<%- include('../partials/dashboardheader.ejs') %> <%if(groups.length > 0){%>
+
+<div class="content">
+	<div class="container-xl">
+		<!-- Page title -->
+		<div class="page-header d-print-none">
+			<div class="row align-items-center">
+				<div class="col">
+					<h2 class="page-title">Voter Groups</h2>
+					<div class="text-muted mt-1">1-18 of people</div>
+				</div>
+				<!-- Page title actions -->
+				<div class="col-auto ms-auto d-print-none">
+					<div class="btn-list">
+						<a
+							href="#"
+							data-bs-toggle="modal"
+							data-bs-target="#modal_new_group"
+							class="btn btn-primary d-none d-sm-inline-block"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="icon"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke="currentColor"
+								fill="none"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<line x1="12" y1="5" x2="12" y2="19" />
+								<line x1="5" y1="12" x2="19" y2="12" />
+							</svg>
+							Add new group
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div class="row row-cards">
+            <%for(var group of groups){%>
+                 <div class="col-4">
+                  <div class="card">
+                      <div class="card-header">
+                      <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                          <h3 class="nav-link">
+                            <%=group.name%>
+                          </h3>
+                        </li>
+                        <li class="nav-item ms-auto">
+                          <a class="nav-link" href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" title="Settings" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><circle cx="12" cy="12" r="3" /></svg>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="card-body">
+                      <p><%=group.description%></p>
+                    </div>
+                    <!-- Card footer -->
+                    <div class="card-footer">
+                      <div class="row align-items-center">
+                          <div class="col-auto">
+                          <a href="#"><%=moment(group.createdAt).format('LL')%></a>
+                        </div>
+                        <div class="col-auto ms-auto">
+                          <div class="avatar-list avatar-list-stacked">
+                            <span class="avatar avatar-sm avatar-rounded" style="background-image: url(/static/avatars/000m.jpg)"></span>
+                            <span class="avatar avatar-sm avatar-rounded">JL</span>
+                            <span class="avatar avatar-sm avatar-rounded" style="background-image: url(/static/avatars/002m.jpg)"></span>
+                            <span class="avatar avatar-sm avatar-rounded" style="background-image: url(/static/avatars/003m.jpg)"></span>
+                            <span class="avatar avatar-sm avatar-rounded" style="background-image: url(/static/avatars/000f.jpg)"></span>
+                            <span class="avatar avatar-sm avatar-rounded">+3</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+             <%}%>   
+                
+        </div>
+	</div>
+</div>
+
+<%}else{%> <%- include('../partials/noResultFound.ejs') %> <%}%>
+
+<div
+	class="modal modal-blur fade"
+	id="modal_new_group"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div
+		class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+		role="document"
+	>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Create New Voter Group</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<form id="groupForm">
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label"
+							>Group Name</label
+						>
+
+						<div class="col">
+							<input
+								type="text"
+								class="form-control"
+								aria-describedby="emailHelp"
+								placeholder="Provide group name"
+								id="name"
+							/>
+							<small class="form-hint"
+								>We'll never share your email with anyone else.</small
+							>
+						</div>
+					</div>
+					<div class="form-group mb-3 row">
+						<label class="form-label col-3 col-form-label"
+							>Group Description</label
+						>
+
+						<div class="col">
+							<div class="mb-3">
+                            <label class="form-label"> <span class="form-label-description">56/100</span></label>
+                            <textarea class="form-control" id="description" rows="6" placeholder="start writing.."></textarea>
+                          </div>
+							<small class="form-hint"
+								>We'll never share your email with anyone else.</small
+							>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">
+					Close
+				</button>
+				<button
+					type="submit"
+					form="groupForm"
+					class="btn btn-primary"
+				>
+					Add Group
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	const groupForm = document.getElementById("groupForm");
+
+	groupForm.addEventListener("submit", async event => {
+		event.preventDefault();
+
+		const name = document.getElementById("name");
+		const description = document.getElementById("description");
+	
+
+		let data = new FormData();
+
+		data.append("name", name.value);
+		data.append("description", description.value);
+
+		console.log({name: name.value, description: description.value, });
+
+		const saveGroup = await fetch(`/group/new`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({description: description.value, name: name.value}),
+		}).then(response => response.json());
+
+
+	});
+
+
+</script>

@@ -150,8 +150,102 @@
 				</div>
 				<%}%>
 			</div>
+		<div class="col-sm-6 col-lg-8">
+<div class="row">
 
-			<div class="col-sm-6 col-lg-5">
+	<%if(election.positions.length > 0){%>
+
+				<%for(var position of election.positions){%>
+			<div class="col-6 mb-3">
+              <div class="card">
+                <ul class="nav nav-tabs nav-tabs-alt" data-bs-toggle="tabs">
+                  <li class="nav-item">
+                    <a href="#tabs-position<%=position._id%>" class="nav-link active" data-bs-toggle="tab"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="4" width="16" height="16" rx="2" /><circle cx="9" cy="12" r=".5" fill="currentColor" /><circle cx="15" cy="12" r=".5" fill="currentColor" /></svg> Position</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#tabs-candidate<%=position._id%>" class="nav-link" data-bs-toggle="tab">Candidates</a>
+                  </li>
+				  <li class="nav-item">
+                    <a href="#tabs-result<%=position._id%>" class="nav-link" data-bs-toggle="tab">Results</a>
+                  </li>
+                  <li class="nav-item ms-auto">
+                    <a href="#tabs-settings-10<%=position._id%>" class="nav-link" title="Settings" data-bs-toggle="tab"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><circle cx="12" cy="12" r="3" /></svg>
+                    </a>
+                  </li>
+                </ul>
+                <div class="card-body">
+                  <div class="tab-content">
+                    <div class="tab-pane active show" id="tabs-position<%=position._id%>">
+                   
+                          <div class="card-title"><%=position.position%></div>
+                          <p>
+                            <%=position.about%>
+                          </p>
+                        
+					
+					</div>
+                    <div class="tab-pane" id="tabs-candidate<%=position._id%>">
+                      <div class="row g-3">
+						  <%if(position.candidates.length > 0){%>
+							<%for(var candidate of position.candidates){%>
+                    <div class="col-6">
+                      <div class="row g-3 align-items-center">
+                        <a href="#" class="col-auto">
+                          <span class="avatar" style="background-image: url(/<%=candidate.candidate.image%>)">
+                            <span class="badge bg-red"></span></span>
+                        </a>
+                        <div class="col text-truncate">
+                          <a href="#" class="text-body d-block text-truncate"><%=candidate.candidate.othernames%> <%=candidate.candidate.surname%></a>
+                          <small class="text-muted text-truncate mt-n1"><%=candidate.candidate.campus%></small>
+                        </div>
+                      </div>
+                    </div>
+					<%}%>
+                  <%}%>
+                    
+                  </div>
+                    </div>
+					<div class="tab-pane" id="tabs-result<%=position._id%>">
+						<%if(position.candidates.length > 0){%>
+						
+						<table class="table card-table table-vcenter">
+                  <thead>
+                    <tr>
+                      <th>Candidate</th>
+                      <th colspan="2">Votes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+					  	<%for(var candidate of position.candidates){%>
+                    <tr>
+                      <td><%=candidate.candidate.othernames%> <%=candidate.candidate.surname%></td>
+                      <td><%=candidate.voteCount%> </td>
+                      <td class="w-50">
+                        <div class="progress progress-xs">
+                          <div class="progress-bar bg-primary" style="width: 71.0%"></div>
+                        </div>
+                      </td>
+                    </tr>
+                    <%}%>  
+                 <%}%>  
+                   
+                    
+                    
+                  </tbody>
+                </table>
+					</div>
+                    <div class="tab-pane" id="tabs-settings-10<%=position._id%>">
+                      <div>Donec ac vitae diam amet vel leo egestas consequat rhoncus in luctus amet, facilisi sit mauris accumsan nibh habitant senectus</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+				<%}%>
+
+				<%}else{%>
+			<div class="col-6">
 				<div class="card">
 					<div class="empty">
 						<div class="empty-img">
@@ -192,6 +286,14 @@
 					</div>
 				</div>
 			</div>
+			<%}%>
+
+
+
+</div>
+
+</div>
+
 		</div>
 	</div>
 </div>

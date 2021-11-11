@@ -1,6 +1,9 @@
 const express = require("express");
 const { ensureAuth, ensureGuest } = require("../../middleware/auth");
 const { loadUsers, createUser } = require("./controllers/user");
+const { loadVotersRegister } = require("./controllers/register");
+const { loadConfig } = require("./controllers/config");
+const {loadGroups} = require("./controllers/groups");
 const {
 	loadElections,
 	createElection,
@@ -23,5 +26,7 @@ app.get("/elections", ensureAuth, loadElections);
 app.get("/elections/new", ensureAuth, createElection);
 app.get("/elections/single/:electionId", ensureAuth, viewElection);
 app.get("/position/new/:electionId", ensureAuth, createPosition);
-
+app.get("/register", ensureAuth, loadVotersRegister);
+app.get("/config", ensureAuth, loadConfig);
+app.get("/groups", ensureAuth, loadGroups);
 module.exports = app;

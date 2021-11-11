@@ -7,18 +7,11 @@ const { uploadBanner } = require("../middleware/upload");
 
 const app = express();
 app.post("/new", uploadBanner.single("banner"), (req, res) => {
-	
-	const {
-		header,
-		about,
-		startsAt,
-		endsAt,
-		positions,
-	} = req.body;
+	const { header, about, startsAt, endsAt, positions } = req.body;
 
 	let banner;
 
-	if (!header || !about  || !startsAt || !endsAt) {
+	if (!header || !about || !startsAt || !endsAt) {
 		return res.status(400).send({ error: "Bad Request" });
 	}
 
@@ -69,9 +62,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:electionId", (req, res) => {
-	const electionId = req.params.electionId
+	const electionId = req.params.electionId;
 	Election.findById(electionId)
-		.populate(["positions","createdBy"])
+		.populate({
+			path: "positions",
+			populate: { path: "candidates.candidate" },
+		})
+		.populate(["createdBy"])
 		.then(result => {
 			return res.status(200).send(result);
 		})
