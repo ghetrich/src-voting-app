@@ -78,4 +78,10 @@ app.post("/new/:electionId", async (req, res) => {
 		});
 });
 
+app.get('/', async (req, res) => {
+
+
+	
+})
+
 module.exports = app;

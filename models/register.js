@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const registerSchema = new Schema({
 	othernames: { type: String, required: true, trim: true },
@@ -12,13 +12,17 @@ const registerSchema = new Schema({
 	image: { type: String, required: true, trim: true },
 	groups: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
 	campus: { type: mongoose.Schema.Types.ObjectId, ref: "Campus" },
-	voteCode: { type: String, trim: true },
-	voteCodeExpiresAt: { type: Date },
+	tokens: [
+		{
+			election:{},
+			voteCode: { type: String, trim: true, default: "UTUH1R" },
+			voteCodeExpiresAt: { type: Date, default: new Date() },
+		},
+	],
+
 	createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	createdAt: { type: Date, default: new Date() },
 });
 
-
-
-const Register = mongoose.model('Register', registerSchema);
-module.exports = Register
+const Register = mongoose.model("Register", registerSchema);
+module.exports = Register;

@@ -79,6 +79,7 @@ app.use("/register", require("./routes/register"));
 app.use("/campus", require("./routes/campus"));
 app.use("/level", require("./routes/level"));
 app.use("/group", require("./routes/group"));
+app.use("/vote", require("./routes/vote"));
 
 app.use("/route", require("./adminClient/routes/base"));
 

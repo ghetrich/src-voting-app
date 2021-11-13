@@ -1,10 +1,10 @@
 const Router = require("express").Router();
 const Register = require("../models/register");
-const { nanoid } = require("nanoid");
-const nodemailer = require("nodemailer");
+
+
 const { uploadProfile } = require("../middleware/upload");
 const { ensureAuth, ensureGuest } = require("../middleware/auth");
-const sendMail = require("../mailService");
+
 const restrictedTo = require("../middleware/restricted");
 const authenticate = require("../middleware/auth");
 // restrictedTo(["admin"]);
@@ -55,15 +55,7 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 			console.log(err);
 		});
 
-	// let code = nanoid(7).toUpperCase();
-	// sendMail(
-	// 	"richardbouaro.a@gmail.com",
-	// 	"VOTE PERMISSION CODE",
-	// 	`This is your permission code -> ${code}`,
-	// 	`<h1>This is your permission code -> ${code}</h1>`
-	// )
-	// 	.then(res => console.log("sent", res))
-	// 	.catch(err => console.log("error", err.message));
+	
 
 	
 });
@@ -71,6 +63,17 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 Router.get("/", (req, res) => {
 	Register.find({})
 		.populate(["level","campus"])
+		.then(result => {
+			return res.status(200).send(result);
+		})
+		.catch(err => {
+			return res.status(500).send(err);
+		});
+});
+
+Router.get("/total", (req, res) => {
+
+	Register.find({ eligibility: true })
 		.then(result => {
 			return res.status(200).send(result);
 		})

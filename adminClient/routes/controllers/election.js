@@ -3,6 +3,8 @@ const ROLES = require("../../../roles");
 const moment = require("moment");
 const { time_assembler, time_options } = require("../../../utilities/timegen");
 const { trunc } = require("../../../utilities/trunc");
+const { votePercentage } = require("../../../utilities/votePercentage");
+const { widthValue, totalVoteCast } = require("../../../utilities/progress");
 const url = process.env.BASE_URL;
 module.exports = {
 	loadElections: async (req, res, next) => {
@@ -17,7 +19,7 @@ module.exports = {
 				BASE_URL: url,
 				new_route: "/route/elections/new",
 				new_button_text: "Setup new election",
-				modal_target:"",
+				modal_target: "",
 				no_result_message:
 					"//Try adjusting your search or filter to find what you're looking for.",
 				moment,
@@ -39,31 +41,37 @@ module.exports = {
 		const electionId = req.params.electionId;
 		try {
 			const election = await axios.get(`${url}/elections/${electionId}`);
-			
-		
+
+			const register = await axios.get(`${url}/register/total`);
+
+			console.log(register.data);
+
 			res.render("../views/pages/singleElection.ejs", {
 				layout: "./Layouts/layout",
 				user: req.user,
 				BASE_URL: url,
 				election: election.data,
-				
+				register:register.data,
 				new_route: "/route/elections/new",
 				new_button_text: "Setup new election",
 				no_result_message:
 					"//Try adjusting your search or filter to find what you're looking for.",
 				moment,
+				widthValue,
+				totalVoteCast,
+				votePercentage,
 			});
 		} catch (err) {
 			console.log(err);
 		}
 	},
 	createPosition: async (req, res, next) => {
-	const electionId = req.params.electionId;
+		const electionId = req.params.electionId;
 		try {
 			const election = await axios.get(`${url}/elections/${electionId}`);
 			const candidates = await axios.get(`${url}/user/candidates`);
 			const groups = await axios.get(`${url}/group`);
-				console.log(groups.data);
+			console.log(groups.data);
 			res.render("../views/pages/newPosition.ejs", {
 				layout: "./Layouts/layout",
 				user: req.user,
@@ -71,11 +79,10 @@ module.exports = {
 				candidates: candidates.data,
 				groups: groups.data,
 				BASE_URL: url,
-				moment
+				moment,
 			});
 		} catch (error) {
 			console.log(error);
 		}
-		
 	},
 };
