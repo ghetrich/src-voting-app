@@ -15,11 +15,11 @@ const sendMail = async (to, subject, text, html) => {
 		// const accessToken = await oAuth2Client.getAccessToken();
 
 		const transport = nodemailer.createTransport({
-			service: "hotmail",
+			service: "outlook",
 			auth: {
 				// type: "OAuth2",
-				user: "richardbouaro@hotmail.com",
-				pass:"1759302tiller"
+				user: "srcgomobile@outlook.com",
+				pass: "@Out@Look@1000",
 				// clientId: process.env.CLIENT_ID,
 				// clientSecret: process.env.CLIENT_SECRET,
 				// refreshToken: process.env.REFRESH_TOKEN,
@@ -28,7 +28,7 @@ const sendMail = async (to, subject, text, html) => {
 		});
 
 		const mailOptions = {
-			from: "GCTU SRC GO MOBILE <richardbouaro@hotmail.com>",
+			from: "GCTU SRC GO MOBILE <srcgomobile@outlook.com>",
 			to,
 			subject,
 			text,
