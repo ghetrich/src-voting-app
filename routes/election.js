@@ -61,6 +61,19 @@ app.get("/", (req, res) => {
 		});
 });
 
+app.get("/recent", (req, res) => {
+	console.log("hit");
+	Election.find({})
+		.sort({createdAt:"DESC"})
+		.limit(4)
+		.then(result => {
+			return res.status(200).send(result);
+		})
+		.catch(err => {
+			return res.status(500).send(err);
+		});
+});
+
 app.get("/:electionId", (req, res) => {
 	const electionId = req.params.electionId;
 	Election.findById(electionId)

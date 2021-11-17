@@ -14,7 +14,7 @@ const registerSchema = new Schema({
 	campus: { type: mongoose.Schema.Types.ObjectId, ref: "Campus" },
 	tokens: [
 		{
-			election:{},
+			election: { type: mongoose.Schema.Types.ObjectId, ref: "Election" },
 			voteCode: { type: String, trim: true, default: "UTUH1R" },
 			voteCodeExpiresAt: { type: Date, default: new Date() },
 		},
