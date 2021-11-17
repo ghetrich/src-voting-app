@@ -64,7 +64,7 @@ app.get("/", (req, res) => {
 app.get("/recent", (req, res) => {
 	console.log("hit");
 	Election.find({})
-		.sort({createdAt:"DESC"})
+		.sort({ createdAt: "DESC" })
 		.limit(4)
 		.then(result => {
 			return res.status(200).send(result);
@@ -78,16 +78,31 @@ app.get("/ongoing", (req, res) => {
 	console.log("hit");
 	Election.find({})
 		.then(result => {
-
 			const ongoing = result.filter(
 				election =>
-					(new Date(election.endsAt) > new Date() &&
-						new Date(election.startsAt) < new Date()) &&
+					new Date(election.endsAt) > new Date() &&
+					new Date(election.startsAt) < new Date() &&
 					!election.isForcedClose
 			);
 			console.log({ result, ongoing });
 
 			return res.status(200).send(ongoing);
+		})
+		.catch(err => {
+			return res.status(500).send(err);
+		});
+});
+
+app.get("/pending", (req, res) => {
+	console.log("hit");
+	Election.find({})
+		.then(result => {
+			const pending = result.filter(
+				election => new Date(election.startsAt) > new Date()
+			);
+			console.log({ result, pending });
+
+			return res.status(200).send(pending);
 		})
 		.catch(err => {
 			return res.status(500).send(err);
