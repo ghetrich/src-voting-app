@@ -12,10 +12,11 @@ const jwt = require("jsonwebtoken");
 const app = express();
 const path = require("path");
 const Pusher = require("pusher");
-app.use(cors({ origin: true, credentials: true }));
+
 require("dotenv").config();
 require("./config/passport")(passport);
 
+app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
