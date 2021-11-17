@@ -74,6 +74,26 @@ app.get("/recent", (req, res) => {
 		});
 });
 
+app.get("/ongoing", (req, res) => {
+	console.log("hit");
+	Election.find({})
+		.then(result => {
+
+			const ongoing = result.filter(
+				election =>
+					(new Date(election.endsAt) > new Date() &&
+						new Date(election.startsAt) < new Date()) &&
+					!election.isForcedClose
+			);
+			console.log({ result, ongoing });
+
+			return res.status(200).send(ongoing);
+		})
+		.catch(err => {
+			return res.status(500).send(err);
+		});
+});
+
 app.get("/:electionId", (req, res) => {
 	const electionId = req.params.electionId;
 	Election.findById(electionId)
