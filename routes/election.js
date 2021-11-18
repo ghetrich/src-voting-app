@@ -64,6 +64,11 @@ app.get("/", (req, res) => {
 app.get("/recent", (req, res) => {
 	console.log("hit");
 	Election.find({})
+		.populate({
+			path: "positions",
+			populate: { path: "candidates.candidate" },
+		})
+		.populate(["createdBy"])
 		.sort({ createdAt: "DESC" })
 		.limit(4)
 		.then(result => {
@@ -77,6 +82,11 @@ app.get("/recent", (req, res) => {
 app.get("/ongoing", (req, res) => {
 	console.log("hit");
 	Election.find({})
+		.populate({
+			path: "positions",
+			populate: { path: "candidates.candidate" },
+		})
+		.populate(["createdBy"])
 		.then(result => {
 			const ongoing = result.filter(
 				election =>
@@ -96,6 +106,11 @@ app.get("/ongoing", (req, res) => {
 app.get("/pending", (req, res) => {
 	console.log("hit");
 	Election.find({})
+		.populate({
+			path: "positions",
+			populate: { path: "candidates.candidate" },
+		})
+		.populate(["createdBy"])
 		.then(result => {
 			const pending = result.filter(
 				election => new Date(election.startsAt) > new Date()
@@ -112,9 +127,15 @@ app.get("/pending", (req, res) => {
 app.get("/closed", (req, res) => {
 	console.log("hit");
 	Election.find({})
+		.populate({
+			path: "positions",
+			populate: { path: "candidates.candidate" },
+		})
+		.populate(["createdBy"])
 		.then(result => {
 			const closed = result.filter(
-				election => new Date(election.endsAt) < new Date() || election.isForcedClose
+				election =>
+					new Date(election.endsAt) < new Date() || election.isForcedClose
 			);
 			console.log({ result, closed });
 
