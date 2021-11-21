@@ -82,6 +82,7 @@ app.get("/recent", (req, res) => {
 app.get("/ongoing", (req, res) => {
 	console.log("hit");
 	Election.find({})
+		.sort({ createdAt: "DESC" })
 		.populate({
 			path: "positions",
 			populate: { path: "candidates.candidate" },

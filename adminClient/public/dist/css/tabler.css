@@ -8698,6 +8698,8 @@ Navbar vertical
 .avatar-xl {
   --tblr-avatar-size: 7rem; }
 
+ 
+
 .avatar-xl .badge:empty {
   width: 1.75rem;
   height: 1.75rem; }

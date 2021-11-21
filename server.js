@@ -87,9 +87,10 @@ app.use("/vote", require("./routes/vote"));
 app.use("/route", require("./adminClient/routes/base"));
 
 app.get("/", ensureGuest, (req, res) => {
-	res.render(__dirname + "/views/pages/index.ejs", {
-		layout: "./Layouts/layout",
-	});
+	res.redirect("/route/vote")
+	// res.render(__dirname + "/views/pages/index.ejs", {
+	// 	layout: "./Layouts/layout",
+	// });
 });
 
 app.get("/login", ensureGuest, (req, res) => {
