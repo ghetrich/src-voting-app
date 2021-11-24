@@ -22,7 +22,7 @@ app.post("/new", uploadBanner.single("banner"), (req, res) => {
 	// }
 
 	if (req.file) {
-		banner = req.file.path;
+		banner = req.file.path.replace(/\\/g, "/");
 	} else {
 		return res.status(400).send({
 			error: "No Banner provided",
@@ -87,7 +87,11 @@ app.get("/ongoing", (req, res) => {
 			path: "positions",
 			populate: { path: "candidates.candidate" },
 		})
-		.populate(["createdBy"])
+		.populate({
+			path: "positions",
+			populate: { path: "allowedVoterGroups" },
+		})
+		.populate(["createdBy", "candidatesList"])
 		.then(result => {
 			const ongoing = result.filter(
 				election =>

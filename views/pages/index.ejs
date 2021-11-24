@@ -63,11 +63,11 @@
                           <a class=" card-link" href="#">
                 <div class="card-cover card-cover-blurred text-center" style="background-image: url(/static/photos/2854fd67ddbd6217.jpg
 )">
-                  <span class="avatar avatar-xl avatar-thumb " style="background-image: url(<%=election.banner%>)"></span>
+                  <span class="avatar avatar-xl avatar-thumb " style="background-image: url(/<%-election.banner%>)"></span>
                 </div>
                 <div class="card-body text-center">
                   <div class="card-title mb-1"><%=election.header%></div>
-                  <div href="#" class="text-muted">Since <%=moment(election.startsAt).fromNow()%> | <span id="timeLeft"></span></div>
+                  <div href="#" class="text-muted">Since <%=moment(election.startsAt).fromNow()%> <span id="timeLeft"></span></div>
                   
                 </div>
               </a>
@@ -75,13 +75,256 @@
                           </div>
                     </div>
                     <div class="tab-pane" id="tabs-about-<%=election._id%>">
-                      <div>Fringilla egestas nunc quis tellus diam rhoncus ultricies tristique enim at diam, sem nunc amet, pellentesque id egestas velit sed</div>
+                        <div class="mb-3"><%=election.about%></div>
+                       <address><strong>Positions<br>              
+                       </strong><%if(election.positions.length < 1){%>
+                        No position added yet
+                        <%}else{%>
+                        <%=election.positions.length %>
+                       <%}%>position<%if(election.positions.length > 1){%>s<%}else{%><%}%><br>
+                                     
+                  </address>
+                   <address><strong>Candidates<br>              
+                       </strong><%if(election.candidatesList.length < 1){%>
+                        No candidates found
+                        <%}else{%>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#modal_candidate_list"><%=election.candidatesList.length %> candidate<%if(election.candidatesList.length > 1){%>s<%}else{%><%}%></a>
+                       <%}%><br>
+                                     
+                  </address>
+                  <address><strong>Started At<br>
+                    </strong><%=moment(election.startsAt).format("LLLL")%></address>
+                    <address><strong>Ends At<br>
+                    </strong><%=moment(election.endsAt).format("LLLL")%></address>
                     </div>
                     <div class="tab-pane" id="tabs-position-<%=election._id%>">
-                      <div>Fringilla egestas nunc quis tellus diam rhoncus ultricies tristique enim at diam, sem nunc amet, pellentesque id egestas velit sed</div>
+                      <!-- <div>Fringilla egestas nunc quis tellus diam rhoncus ultricies tristique enim at diam, sem nunc amet, pellentesque id egestas velit sed</div> -->
+                     
+                     <%if(election.positions.length > 0){%>
+                      <div class="list-group card-list-group">
+                  <%for(var position of election.positions){%>
+        
+                  <div class="list-group-item">
+                    <div class="row g-2 align-items-center">
+                      
+                      <div class="col-auto">
+                        <img src="/uploads/images/1.jpg" class="rounded" alt="Górą ty" width="40" height="40">
+                      </div>
+                      <div class="col">
+                        <%=position.position%>
+                        <div class="text-muted">
+                          <a href="#" data-bs-toggle="modal" data-bs-target="#modal_candidate_list_<%=position._id%>" >Candidates</a> <br>
+                          <%if(!position.isGeneral || position.allowedVoterGroups > 0){%>
+                          Eligible <a href="" data-bs-toggle="modal" data-bs-target="#modal_groups_list_<%=position._id%>">Groups</a>
+                          <%}else{%> Open to all <%}%>
+                        </div>
+                      </div>
+                      <div class="col-auto text-muted">
+                        <%=position.voters.length%> votes
+                      </div>
+                      <div class="col-auto">
+                        <a href="#" class="link-secondary">
+                          <button class="switch-icon" data-bs-toggle="switch-icon">
+                            <span class="switch-icon-a <%if(position.voters.length > 0){%> text-green<%}else{%>text-muted<%}%>">
+<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>                            </span>
+  
+                          </button>
+                        </a>
+                      </div>
+                      <div class="col-auto lh-1">
+                        <div class="dropdown">
+                          <a href="#" class="link-secondary" data-bs-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></svg>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal_vote_<%=position._id%>">
+                              Vote
+                            </a>
+                            <a class="dropdown-item" href="#">
+                              About this position
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+    <div class="modal modal-blur fade" id="modal_candidate_list_<%=position._id%>" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><%=position.position%> Candidates</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+             <div class="row g-3">
+
+                <%if(position.candidates.length > 0){%>
+                      <%for(var candidate of position.candidates){%>
+                    <div class="col-6">
+                      <div class="row g-3 align-items-center">
+                        <a href="#" class="col-auto">
+                          <span class="avatar" style="background-image: url(/<%=candidate.candidate.image%>)">
+                            <span class="badge bg-red"></span></span>
+                        </a>
+                        <div class="col text-truncate">
+                          <a href="#" class="text-body d-block text-truncate"><%=candidate.candidate.surname%> <%=candidate.candidate.othernames%></a>
+                          <small class="text-muted text-truncate mt-n1"><%=candidate.candidate.campus%></small>
+                        </div>
+                      </div>
+                    </div>
+                      <%}%>
+                  <%}else{%>  No Candidates found <%}%>
+                  </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal modal-blur fade" id="modal_groups_list_<%=position._id%>" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><%=position.position%> Eligible Groups</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+             <div class="row g-3">
+
+                <%if(position.allowedVoterGroups.length > 0){%>
+                      <%for(var group of position.allowedVoterGroups){%>
+                    <div class="col-12">
+                      <div class="row g-3 align-items-center">
+                        <a href="#" class="col-auto">
+                          <span class="avatar" style="background-image: url(/n)">
+                            <span class="badge bg-red"></span></span>
+                        </a>
+                        <div class="col text-truncate">
+                          <a href="#" class="text-body d-block text-truncate"><%=group.name%> </a>
+                          <small class="text-muted text-truncate mt-n1">Created on <%=moment(group.createdAt).format("LL")%></small>
+                        </div>
+                      </div>
+                    </div>
+                      <%}%>
+                  <%}else{%>  No group found <%}%>
+                  </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal modal-blur fade" id="modal_vote_<%=position._id%>" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><%=position.position%> Ballot</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+             <form id="voteCastForm">
+                 <%if(position.candidates.length > 0){%>
+                <div class="mb-3">
+                          <label class="form-label">Email</label>
+                          <div class="input-group input-group-flat">
+                            <input type="text" class="form-control text-end pe-0"  id="voter_email" autocomplete="off">
+                            <span class="input-group-text">
+                              @live.gtuc.edu.gh
+                            </span>
+                          </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Vote token</label>
+                    <input type="text" id="token" class="form-control" placeholder="G0QM45" autocomplete="off"/>
+                </div>
+                <div class="mb-3">
+                          <label class="form-label">Candidates</label>
+                          <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+                            
+                            <%for(var candidate of position.candidates){%>
+                            
+                            <label class="form-selectgroup-item flex-fill">
+                              <input type="radio" name="candidate" value="<%=candidate.candidate._id%>" class="form-selectgroup-input" >
+                              <div class="form-selectgroup-label d-flex align-items-center p-3">
+                                <div class="me-3">
+                                  <span class="form-selectgroup-check"></span>
+                                </div>
+                                <div class="form-selectgroup-label-content d-flex align-items-center">
+                                  <span class="avatar me-3" style="background-image: url(/<%=candidate.candidate.image%>)"></span>
+                                  <div>
+                                    <div class="font-weight-medium"><%=candidate.candidate.surname%> <%=candidate.candidate.othernames%></div>
+                                    <div class="text-muted"><%=candidate.candidate.campus%></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </label>
+                             
+<%}%>
+                            
+                          </div>
+                </div>
+<%}else{%>
+                                No candidate
+                                 <%}%>
+             </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" form="voteCastForm"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>                            </span>
+ Vote</button>
+          </div>
+        </div>
+      </div>
+    </div>
+                  <%}%>
+                </div>
+
+                <%}else{%>
+No Position
+
+    <%}%>
                     </div>
                     <div class="tab-pane" id="tabs-token-<%=election._id%>">
-                      <div>Donec ac vitae diam amet vel leo egestas consequat rhoncus in luctus amet, facilisi sit mauris accumsan nibh habitant senectus</div>
+                      <div class="mb-3">Donec ac vitae diam amet vel leo egestas consequat rhoncus in luctus amet, facilisi sit mauris accumsan nibh habitant senectus</div>
+                      <form id="tokenForm">
+                        <input type="text" id="election" value="<%=election._id%>" style="visibility:hidden">
+                        <div class="mb-3">
+                          <label class="form-label">Email</label>
+                          <div class="input-group input-group-flat">
+                            <input type="text" class="form-control text-end pe-0"  id="email" autocomplete="off">
+                            <span class="input-group-text">
+                              @live.gtuc.edu.gh
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- <div class="mb-3">
+                            <label class="form-label">Input group buttons</label>
+                            <div class="input-group">
+                              <input type="text" class="form-control">
+                              <button type="button" class="btn">Action</button>
+                              <button data-bs-toggle="dropdown" type="button" class="btn dropdown-toggle dropdown-toggle-split"> </button>
+                              <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">
+                                  Action
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                  Another action
+                                </a>
+                              </div>
+                            </div>
+                          </div> -->
+
+                        <div class="form-footer">
+                    <button type="submit" class="btn btn-primary" form="tokenForm">Email me</button>
+                  </div>
+                      </form>
+                      
                     </div>
                   </div>
                 </div>
@@ -135,18 +378,88 @@
 
 </div>
 <!-- <%- include('../partials/footer.ejs') %> -->
+<div class="modal modal-blur fade" id="modal_candidate_list" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Candidates List</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+             <div class="row g-3">
 
+                <%if(election.candidatesList.length > 0){%>
+                      <%for(var candidate of election.candidatesList){%>
+                    <div class="col-6">
+                      <div class="row g-3 align-items-center">
+                        <a href="#" class="col-auto">
+                          <span class="avatar" style="background-image: url(/<%=candidate.image%>)">
+                            <span class="badge bg-red"></span></span>
+                        </a>
+                        <div class="col text-truncate">
+                          <a href="#" class="text-body d-block text-truncate"><%=candidate.surname%> <%=candidate.othernames%></a>
+                          <small class="text-muted text-truncate mt-n1"><%=candidate.campus%></small>
+                        </div>
+                      </div>
+                    </div>
+                      <%}%>
+                  <%}else{%>  No Candidates found <%}%>
+                  </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script src="./dist/libs/nouislider/distribute/nouislider.min.js"></script>
+  <script src="./dist/libs/litepicker/dist/litepicker.js"></script>
+  <script src="./dist/libs/choices.js/public/assets/scripts/choices.js"></script>
+  <!-- Tabler Core -->
+  <script src="./dist/js/tabler.min.js"></script>
 <script type="text/javascript" >
-const moment = "<%=moment()%>"
-var eventTime= Date.now("<%=election.endsAt%>")
-var currentTime = Date.now();
-var diffTime = eventTime - currentTime;
-var duration = moment.duration(diffTime*1000, 'milliseconds');
-var interval = 1000;
+// const moment = "<%=moment()%>"
+// var eventTime= Date.now("<%=election.endsAt%>")
+// var currentTime = Date.now();
+// var diffTime = eventTime - currentTime;
+// var duration = moment.duration(diffTime*1000, 'milliseconds');
+// var interval = 1000;
 
-setInterval(function(){
-  duration = moment.duration(duration - interval, 'milliseconds') ;
-    $('#timeLeft').text(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
-    alert(2)
-}, interval);
+// setInterval(function(){
+//   duration = moment.duration(duration - interval, 'milliseconds') ;
+//     $('#timeLeft').text(duration.hours() + ":" + duration.minutes() + ":" + duration.seconds())
+//     alert(2)
+// }, interval);
+
+const tokenForm = document.getElementById('tokenForm')
+
+tokenForm.addEventListener("submit", async e=>{
+    e.preventDefault();
+
+    const email = document.getElementById('email');
+    const election = document.getElementById('election');
+
+    const domain = "@live.gtuc.edu.gh"
+
+    const votermail= email.value + domain
+
+    console.log({email: votermail, election: election.value});
+
+    const sendMail = await fetch(`/vote/token/${election.value}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({email: votermail, election: election.value}),
+		}).then(response => {
+            console.log(response);
+           return response.json()
+        });
+
+        
+
+})
+
 </script>

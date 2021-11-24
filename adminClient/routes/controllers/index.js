@@ -2,6 +2,9 @@ const axios = require("axios");
 const moment = require("moment");
 const { trunc } = require("../../../utilities/trunc");
 const url = process.env.BASE_URL;
+const domain = process.env.DOMAIN
+
+
 module.exports = {
 	loadOngoingElections: async (req, res, next) => {
 		try {
@@ -23,7 +26,8 @@ module.exports = {
 				new_button_text: "Add new Campus",
 				no_result_message:
 					"//Try adjusting your search or filter to find what you're looking for.",
-				moment,
+                moment,
+                domain
 				
 			});
 		} catch (error) {

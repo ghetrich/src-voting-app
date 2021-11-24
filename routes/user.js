@@ -19,7 +19,7 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 	}
 
 	if (req.file) {
-		image = req.file.path;
+		image = req.file.path.replace(/\\/g, "/");
 		console.log(req.file);
 	}
 

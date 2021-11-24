@@ -14,67 +14,81 @@ app.put("/token/:electionId", async (req, res) => {
 	const electionId = req.params.electionId;
 	const { email } = req.body;
 
+	console.log(email);
+
 	if (!email) {
 		return res.status(400).send({ error: "missing email" });
 	}
 
 	Register.find({ email })
 		.then(voter => {
-			if (voter.length < 0) {
+			
+			if (voter.length < 1) {
 				return res.status(402).send({ error: "email not found" });
 			} else if (voter[0].eligibility == false) {
 				return res.status(402).send({ error: "not eligible" });
 			} else {
-				const voteCode = nanoid(6).toUpperCase();
 
-				Election.findById(electionId)
-					.then(election => {
-						if (new Date(election.endsAt) < new Date()) {
-							return res
-								.status(403)
-								.send({ error: "election has ended" });
-						}
+				const tokens = voter[0].tokens.map(token => token.election);
+				
+				if (tokens.includes(electionId)) {
+					return res.status(402).send({ error: "Token has already been sent" });
+				} else {
+					const voteCode = nanoid(6).toUpperCase();
 
-						console.log(voter[0]);
-						Register.findByIdAndUpdate(voter[0]._id, {
-							$push: {
-								tokens: {
-									election: election._id,
-									voteCode,
-									voteCodeExpiresAt: new Date(election.endsAt),
-								},
-							},
-						})
-							.then(done => {
-								console.log(done);
-								sendMail(
-									`${email}`,
-									"VOTE PERMISSION CODE",
-									`This is your permission code -> ${voteCode}`,
-									messageHTML(voteCode)
-								)
-									.then(res => console.log("sent", res))
-									.catch(err => console.log("error", err.message));
-
-								return res.status(200).send(done);
-							})
-							.catch(error => {
-								console.log(error);
+					Election.findById(electionId)
+						.then(election => {
+							if (new Date(election.endsAt) < new Date()) {
 								return res
-									.status(500)
-									.send({ error: "Could not send token" });
-							});
-					})
-					.catch(error => {
-						console.log(error);
-						return res
-							.status(500)
-							.send({ error: "Something went wrong" });
-					});
+									.status(403)
+									.send({ error: "election has ended" });
+							}
+
+							console.log(voter[0]);
+							Register.findByIdAndUpdate(voter[0]._id, {
+								$push: {
+									tokens: {
+										election: election._id,
+										voteCode,
+										voteCodeExpiresAt: new Date(election.endsAt),
+									},
+								},
+							})
+								.then(done => {
+									console.log(done);
+									sendMail(
+										`${email}`,
+										"VOTE PERMISSION CODE",
+										`This is your permission code -> ${voteCode}`,
+										messageHTML(voteCode)
+									)
+										.then(res => console.log("sent", res))
+										.catch(err => console.log("error", err.message));
+
+									return res.status(200).send(done);
+								})
+								.catch(error => {
+									console.log(error);
+									return res
+										.status(500)
+										.send({ error: "Could not send token" });
+								});
+						})
+						.catch(error => {
+							console.log(error);
+							return res
+								.status(500)
+								.send({ error: `Something went wrong 1 => ${error}` });
+						});
+				}
+
+				
 			}
 		})
 		.catch(error => {
-			return res.status(500).send({ error: "Something went wrong" });
+			return res
+				.status(500)
+				.send({ error: `Something went wrong 2 => ${error}` });
 		});
 });
 
