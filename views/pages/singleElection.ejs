@@ -12,12 +12,18 @@
 				</div>
                 <%if(election.positions.length > 0){%>
                 <div class="col-auto ms-auto d-print-none">
-                  <div class="d-flex">
-                    
+                  <div class="d-flex btn-list">
+                    <span class="d-none d-sm-inline">
+                    <a href="#" class="btn btn-white" id="btn_release">
+                        Release Results
+                    </a>
+                </span>
+				<%if(  new Date()< new Date(election.startsAt)){%>
                     <a href="/route/position/new/<%=election._id%>" class="btn btn-primary">
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                       Create new position
                     </a>
+					<%}%>
                   </div>
                 </div>
                 <%}%>
@@ -60,10 +66,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="alert alert-danger mb-3">
+				<!-- <div class="alert alert-danger mb-3">
 					All icons come from the Tabler Icons set and are MIT-licensed.
 					Visit
-				</div>
+				</div> -->
 				<div class="col-12">
 					<div class="card mb-3">
 						<div class="card-header">
@@ -653,6 +659,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+			  <div class="alert alert-danger mb-3">
+					
+				</div>
             <form id="positionForm">
 <div class="form-group mb-3 row">
 								<label class="form-label col-3 col-form-label"
@@ -709,7 +718,7 @@
           </div>
         </div>
       </div>
-    </div>
+</div>
 
 <!-- Libs JS -->
 <script src="./dist/libs/nouislider/distribute/nouislider.min.js"></script>

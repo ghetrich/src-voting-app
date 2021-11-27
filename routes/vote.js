@@ -112,6 +112,8 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 	const electionId = req.params.electionId;
 	const { candidate, voter, voteToken } = req.body;
 
+	console.log({ candidate, voter, voteToken, electionId, positionId});
+
 	Election.findById(electionId)
 		.then(election => {
 			if (
@@ -119,18 +121,26 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 				new Date(election.endsAt) < new Date() ||
 				election.isForcedClose == true
 			) {
+				console.log("You cannot cast vote");
 				return res.status(403).send({ error: "You cannot cast vote" });
 			}
 
 			// check whether the voter is eligible to vote
-			Register.findById(voter)
+			Register.find({ email:voter})
 				.then(voter => {
-					if (!voter.eligibility) {
+					if (voter.length < 1) {
+						console.log("Voter cannot be found in the register");
+						return res.status(403).send({
+							error: "Voter cannot be found in the register",
+						});
+					}
+					else if (!voter[0].eligibility) {
+						console.log("You cannot cast vote! You're not eligible");
 						return res.status(403).send({
 							error: "You cannot cast vote! You're not eligible",
 						});
 					} else if (
-						!voter.tokens.some(token => {
+						!voter[0].tokens.some(token => {
 							if (
 								token.election == electionId &&
 								new Date(token.voteCodeExpiresAt) > new Date() &&
@@ -140,27 +150,21 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 							}
 						})
 					) {
+							console.log("You cannot cast vote! token invalid");
 						return res.status(403).send({
 							error: "You cannot cast vote! token invalid",
 						});
 					} else {
 						Position.findById(positionId)
 							.then(position => {
-								// console.log({
-								// 	allowedVoterGroups: position.allowedVoterGroups,
-								// 	groups: voter.groups,
-								// 	isGeneral: position.isGeneral,
-								// 	qualify: position.allowedVoterGroups.includes(
-								// 		voter.groups
-								// 	),
-								//});
-								if (position.voters.includes(voter._id)) {
-									return res.status(200).send({
+								
+								if (position.voters.includes(voter[0]._id)) {
+									return res.status(201).send({
 										msg: "You've already voted",
 									});
 								} else if (
 									position.allowedVoterGroups.some(group =>
-										voter.groups.includes(group)
+										voter[0].groups.includes(group)
 									) ||
 									position.isGeneral == true
 								) {
@@ -170,7 +174,7 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 											$inc: { "candidates.$.voteCount": 1 },
 
 											$push: {
-												voters: voter._id,
+												voters: voter[0]._id,
 											},
 										},
 										{ new: true }
@@ -188,13 +192,16 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 											// 	.catch(error => {
 											// 		console.log(error);
 											// 	});
-
+												console.log(vote);
                                             return res.status(200).send(vote);
 										})
 										.catch(error => {
 											console.log(error);
 										});
 								} else {
+									console.log(
+										"You cannot cast vote! You do not qualify to cast vote for this position"
+									);
 									return res.status(403).send({
 										error: "You cannot cast vote! You do not qualify to cast vote for this position",
 									});

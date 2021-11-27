@@ -13,8 +13,8 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 	console.log(req.body);
 	let image = "uploads/images/1.jpg";
 	if (!surname || !othernames || !role || !username || !phone || !about || !campus) {
-		return res.status(400).send({
-			error: "Please enter all fields",
+		return res.status(400).send({status:400,
+			error: "Please fill in all fields",
 		});
 	}
 
@@ -26,7 +26,9 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 	User.find({ username })
 		.then(userExist => {
 			if (userExist.length > 0) {
-				return res.status(402).send({ error: "User already exists" });
+				return res
+					.status(402)
+					.send({ status: 402, error: "User already exists" });
 			}
 
 			let password = nanoid(8).toUpperCase();
@@ -59,20 +61,23 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 							)
 								.then(res => console.log("sent", res))
 								.catch(err => console.log("error", err.message));
-							return res.status(200).send(user);
+							return res.status(200).send({ status: 200, msg:"User successfully saved" });
 						})
 						.catch(err => {
 							console.log(err);
 							return res
 								.status(500)
-								.send({ error: "User could not be saved" });
+								.send({
+									status: 500,
+									error: "User could not be saved",
+								});
 						});
 				});
 			});
 		})
 		.catch(err => {
 			console.log(err);
-			return res.status(500).send({ error: err });
+			return res.status(500).send({ status: 400, error: "Something went wrong with the server" });
 		});
 });
 

@@ -164,6 +164,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+			<div class="alert alert-danger mb-3 d-none" id="alert_danger">
+					
+				</div>
+         <div class="alert alert-success mb-3 d-none" id="alert_success">
+					
+				</div>
             <form id="voterRegisterForm">
 						<div class="form-group mb-3 row">
 								<label class="form-label col-3 col-form-label"
@@ -336,6 +342,9 @@
     </div>
 
 
+
+
+
 	<script type="text/javascript">
 	const voterRegisterForm = document.getElementById("voterRegisterForm");
 	// const restricted = document.getElementById("restricted");
@@ -403,6 +412,24 @@
 			method: "POST",
 			body: data,
 		}).then(response => response.json());
+
+
+		if (saveVoter.status == 200) {
+      
+      		document.getElementById("alert_danger").classList.add("d-none")
+			document.getElementById("alert_success").innerText = saveVoter.msg
+			document.getElementById("alert_success").classList.remove("d-none")
+
+      		setTimeout(() => {
+         		window.location.reload()
+     		 }, 2000);
+
+		} else {
+			console.log(saveVoter.error);
+      		document.getElementById("alert_success").classList.add("d-none")
+      		document.getElementById("alert_danger").innerText = saveVoter.error
+			document.getElementById("alert_danger").classList.remove("d-none")
+		}
 	
 	})
 

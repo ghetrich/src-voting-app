@@ -15,7 +15,7 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 	const { othernames, surname, email, level, campus, index, groups } = req.body;
 
 	if ((!othernames || !surname || !email, !level || !campus || !index)) {
-		return res.status(404).send("Empty field detected!");
+	return res.status(404).send({status:402, error:"Empty field detected!"});
 	}
 
 	if (req.file) {
@@ -26,7 +26,7 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 	Register.find({ email })
 		.then(voterExist => {
 			if (voterExist.length > 0) {
-				return res.status(402).send({ error: "Voter already exists" });
+				return res.status(402).send({status:402, error: "Voter already exists" });
 			}
 
 			const newRegister = new Register({
@@ -44,15 +44,21 @@ Router.post("/new", uploadProfile.single("image"), (req, res) => {
 				.save()
 				.then(result => {
 					console.log(result);
-					return res.status(200).send(result);
+					return res.status(200).send({ status: 200 , msg: "Voter has been registered successfully"});
 				})
 				.catch(err => {
 					console.log(err);
-					return res.status(500).send(err);
+					return res.status(500).send({ status: 402 , error:"Something went wrong with the registration"});
 				});
 		})
 		.catch(err => {
 			console.log(err);
+			return res
+				.status(500)
+				.send({
+					status: 500,
+					error: "Something went wrong with the server",
+				});
 		});
 
 	

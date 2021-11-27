@@ -182,6 +182,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div class="alert alert-danger mb-3 d-none" id="alert_danger">
+					
+				</div>
+         <div class="alert alert-success mb-3 d-none" id="alert_success">
+					
+				</div>
             <form id="campusForm">
 						<div class="form-group mb-3 row">
 								<label class="form-label col-3 col-form-label"
@@ -223,7 +229,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn me-auto" id="close_modal_btn" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary" form="campusForm">Add Campus</button>
           </div>
         </div>
@@ -238,6 +244,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div class="alert alert-danger mb-3 d-none" id="alert_danger_level">
+					
+				</div>
+         <div class="alert alert-success mb-3 d-none" id="alert_success_level">
+					
+				</div>
             <form id="levelForm">
 						<div class="form-group mb-3 row">
 								<label class="form-label col-3 col-form-label"
@@ -286,6 +298,152 @@
       </div>
 </div>
 
+<a
+	href="#"
+	style="visibility: hidden"
+	id="modal_success_call"
+	data-bs-toggle="modal"
+	data-bs-target="#modal_success"
+></a>
+
+<a
+	href="#"
+	style="visibility: hidden"
+	id="modal_danger_call"
+	data-bs-toggle="modal"
+	data-bs-target="#modal_danger"
+></a>
+<!-- ALERT GOOD-->
+<div
+	class="modal modal-blur fade"
+	id="modal_success"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button
+				type="button"
+				class="btn-close"
+				data-bs-dismiss="modal"
+				aria-label="Close"
+			></button>
+			<div class="modal-status bg-success"></div>
+			<div class="modal-body text-center py-4">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon mb-2 text-green icon-lg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					stroke-width="2"
+					stroke="currentColor"
+					fill="none"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<circle cx="12" cy="12" r="9" />
+					<path d="M9 12l2 2l4 -4" />
+				</svg>
+				<h3>Election Saved</h3>
+				<div class="text-muted" id="modal_success_election">
+					Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque
+					animi deleniti cupiditate eum consectetur neque, beatae aliquid?
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<a href="/route/elections" class="btn btn-white w-100">
+								Go to Elections
+							</a>
+						</div>
+						<div class="col">
+							<a href="" class="btn btn-success w-100" id="success_stay">
+								Stay Here
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ALERT BAD-->
+
+<div
+	class="modal modal-blur fade"
+	id="modal_danger"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button
+				type="button"
+				class="btn-close"
+				data-bs-dismiss="modal"
+				aria-label="Close"
+			></button>
+			<div class="modal-status bg-danger"></div>
+			<div class="modal-body text-center py-4">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon mb-2 text-danger icon-lg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					stroke-width="2"
+					stroke="currentColor"
+					fill="none"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<path d="M12 9v2m0 4v.01" />
+					<path
+						d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"
+					/>
+				</svg>
+				<h3>Are you sure?</h3>
+				<div class="text-muted">
+					Do you really want to remove 84 files? What you've done cannot be
+					undone.
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<a
+								href="#"
+								class="btn btn-white w-100"
+								data-bs-dismiss="modal"
+							>
+								Cancel
+							</a>
+						</div>
+						<div class="col">
+							<a
+								href="#"
+								class="btn btn-danger w-100"
+								data-bs-dismiss="modal"
+							>
+								Delete 84 items
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	const campusForm = document.getElementById("campusForm");
 	const levelForm = document.getElementById("levelForm");
@@ -310,8 +468,24 @@
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({location: location.value, name: name.value}),
-		}).then(response => response.json());
+		}).then(response =>  response.json());
 
+    
+    if (saveCampus.status == 200) {
+      
+      document.getElementById("alert_danger").classList.add("d-none")
+			document.getElementById("alert_success").innerText = saveCampus.msg
+			document.getElementById("alert_success").classList.remove("d-none")
+
+      setTimeout(() => {
+         window.location.reload()
+      }, 2000);
+
+		} else {
+      document.getElementById("alert_success").classList.add("d-none")
+      document.getElementById("alert_danger").innerText = saveCampus.error
+			document.getElementById("alert_danger").classList.remove("d-none")
+		}
 
 	});
 
@@ -338,6 +512,22 @@
 			body: JSON.stringify({value: value.value, name: name.value}),
 		}).then(response => response.json());
 
+    if (saveLevel.status == 200) {
+      
+
+      document.getElementById("alert_danger_level").classList.add("d-none")
+			document.getElementById("alert_success_level").innerText = saveLevel.msg
+			document.getElementById("alert_success_level").classList.remove("d-none")
+
+      setTimeout(() => {
+         window.location.reload()
+      }, 2000);
+
+		} else {
+      document.getElementById("alert_success_level").classList.add("d-none")
+      document.getElementById("alert_danger_level").innerText = saveLevel.error
+			document.getElementById("alert_danger_level").classList.remove("d-none")
+		}
 
 	});
 </script>

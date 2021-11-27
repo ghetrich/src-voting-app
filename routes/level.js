@@ -8,7 +8,9 @@ app.post("/new", async (req, res) => {
 	const { name, value } = req.body;
 
 	if (!name || !value) {
-		return res.status(401).send({ error: "all fields are required" });
+		return res
+			.status(401)
+			.send({ status: 500, error: "all fields are required" });
 	}
 
 	const newLevel = new Level({ name, value, createdBy: user.id });
@@ -19,24 +21,32 @@ app.post("/new", async (req, res) => {
 				console.log(level);
 				return res
 					.status(402)
-					.send({ error: "Level with this name already exists" });
+					.send({
+						status: 500,
+						error: "Level with this name already exists",
+					});
 			}
 
 			newLevel
 				.save()
 				.then(item => {
 					console.log(item);
-					return res.status(200).send(item);
+					return res.status(200).send({status: 200,msg: "Level successfully saved"});
 				})
 				.catch(err => {
-					return res.status(500).send({ error: "Error saving campus" });
+					return res
+						.status(500)
+						.send({ status: 500, error: "Error saving campus" });
 				});
 		})
 		.catch(err => {
 			console.log(err);
-			return res.status(500).send({
-				error: "Something went wrong when trying to create level",
-			});
+			return res
+				.status(500)
+				.send({
+					status: 500,
+					error: "Something went wrong when trying to create level",
+				});
 		});
 });
 

@@ -15,7 +15,7 @@ const sendMail = async (to, subject, text, html) => {
 		// const accessToken = await oAuth2Client.getAccessToken();
 
 		const transport = nodemailer.createTransport({
-			service: "outlook",
+			service: "hotmail",
 			auth: {
 				// type: "OAuth2",
 				user: "srcgomobile@outlook.com",

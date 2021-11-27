@@ -26,17 +26,22 @@ app.post("/new", async (req, res) => {
 				.save()
 				.then(item => {
 					console.log(item);
-					return res.status(200).send(item);
+					return res.status(200).send({status:200, msg: "Campus saved successfully"});
 				})
 				.catch(err => {
-					return res.status(500).send({ error: "Error saving campus" });
+					return res
+						.status(500)
+						.send({ status: 500, error: "Error saving campus" });
 				});
 		})
 		.catch(err => {
 			console.log(err);
-			return res.status(500).send({
-				error: "Something went wrong when trying to create campus",
-			});
+			return res
+				.status(500)
+				.send({
+					status: 500,
+					error: "Something went wrong when trying to create campus",
+				});
 		});
 });
 
