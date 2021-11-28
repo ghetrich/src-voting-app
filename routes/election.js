@@ -156,6 +156,33 @@ app.get("/closed", (req, res) => {
 		});
 });
 
+app.get("/released", (req, res) => {
+	console.log("hit");
+	Election.find({isPublished:true})
+		.sort({ endsAt: "DESC" })
+		.populate({
+			path: "positions",
+			populate: { path: "candidates.candidate" },
+		})
+		.populate({
+			path: "positions",
+			populate: { path: "allowedVoterGroups" },
+		})
+		.populate(["createdBy", "candidatesList"])
+		.then(result => {
+			const closed = result.filter(
+				election =>
+					new Date(election.endsAt) < new Date() || election.isForcedClose
+			);
+			console.log({ result, closed });
+
+			return res.status(200).send(closed);
+		})
+		.catch(err => {
+			return res.status(500).send(err);
+		});
+});
+
 app.get("/:electionId", (req, res) => {
 	const electionId = req.params.electionId;
 	Election.findById(electionId)

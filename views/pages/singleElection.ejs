@@ -262,7 +262,7 @@
 											data-position = "<%=position._id%>"
 											class="form-check-input position-static"
 											type="checkbox"
-											id="resultsReleaseBtn"
+											id="resultsReleaseBtn<%=position._id%>"
 										<%if(position.isPublished){%> checked <%}%>
 										 <%if(new Date() < new Date(election.endsAt) ){%>disabled<%}%>
                                             
@@ -271,7 +271,40 @@
 								</div>
 								<%}%>
 							</div>
+<script>
+	
+	document.getElementById("resultsReleaseBtn<%=position._id%>").addEventListener("change", async e => {
+			
+		// const positionId = e.target.dataset.position
+		
+			const setReleaseValue = await fetch(`/position/results/publish/<%=position._id%>/<%=election._id%>`, {
 
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				
+				
+			}),
+		}).then(response => response.json());
+
+		if (setReleaseValue.status == 200) {
+			console.log(setReleaseValue.msg);
+			document.getElementById("modal_success_text").innerText = setReleaseValue.msg
+			document.getElementById("success_trigger").click();
+		} else {
+			console.log(setReleaseValue.msg);
+			document.getElementById("modal_error_text").innerText = setReleaseValue.msg
+			document.getElementById("error_trigger").click();
+
+		}
+
+		
+		
+	});
+
+</script>
 
                     </div>
                   </div>
@@ -929,7 +962,7 @@
 <script type="text/javascript">
 	const forceCloseCheck = document.getElementById("forceClose");
 	const editElectionForm = document.getElementById("electionForm");
-	const resultsReleaseBtn = document.getElementById("resultsReleaseBtn");
+	
 
 	forceCloseCheck.addEventListener("change", e => {
 		if (e.target.checked) {
@@ -937,36 +970,7 @@
 		}
 	});
 
-	resultsReleaseBtn.addEventListener("change", async e => {
-			
-		const positionId = e.target.dataset.position
-		
-			const setReleaseValue = await fetch(`/position/results/publish/${positionId}/<%=election._id%>`, {
 
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				
-				
-			}),
-		}).then(response => response.json());
-
-		if (setReleaseValue.status == 200) {
-			console.log(setReleaseValue.msg);
-			document.getElementById("modal_success_text").innerText = setReleaseValue.msg
-			document.getElementById("success_trigger").click();
-		} else {
-			console.log(setReleaseValue.msg);
-			document.getElementById("modal_error_text").innerText = setReleaseValue.msg
-			document.getElementById("error_trigger").click();
-
-		}
-
-		
-		
-	});
 	
 
 	editElectionForm.addEventListener("submit", async e => {

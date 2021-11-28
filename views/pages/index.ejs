@@ -44,7 +44,7 @@
                 </div>
 
               <div class="list-group list-group-flush overflow-auto" style="max-height: 37rem">
-                  <div class="list-group-header sticky-top text-green">Result Released</div>
+                  <div class="list-group-header sticky-top text-green"><%=closedElections.length%> elections</div>
 
                   <%if(closedElections.length > 0){%>
                     <%for(var election of closedElections){%>
@@ -76,6 +76,7 @@
                   <div class=" card mb-3">
                       <div class="card-body">
                       <h3 class=" card-title"><%=position.position%></h3>
+                    <%if(position.isPublished){%>
                 	<div class="row align-items-center mb-3">
                     <div class="col-auto">
                       <span class="bg-green-lt avatar">
@@ -91,7 +92,7 @@
                         Total votes cast since <%=moment(election.startsAt).format("LL")%>
                       </div>
                     </div>
-                  			</div>
+                  	</div>
 						
 					
                   <table class="table card-table table-vcenter">
@@ -114,8 +115,10 @@
                     </tr>
                     <%}%>  
                   </tbody>
-                         </table> 
-                        
+                    </table> 
+                      <%}else{%>  
+                        <h4 class="text-red">Results not published</h4>
+                        <%}%>
                         </div>
 				
                  </div>
@@ -581,7 +584,23 @@ if (sendMail.status == 200) {
          </div>
     </div> 
     <%}else{%>
-       
+       <div class="col-4">
+                  <div class="card">
+                    <div class="empty">
+                      <div class="empty-img"><img src="/static/illustrations/undraw_quitting_time_dm8t.svg" height="128"  alt="">
+                      </div>
+                      <p class="empty-title">No ongoing results found</p>
+                      <p class="empty-subtitle text-muted">
+                        Are you expecting an ongoing elections? Unfortunatly, there isn't any. 
+                      </p>
+                      <div class="empty-action">
+                        <a href="#" class="btn btn-primary" id="refresh">
+<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5" /></svg>                         Check again
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
     <%}%>
 	
 
@@ -594,3 +613,12 @@ if (sendMail.status == 200) {
   <script src="./dist/libs/choices.js/public/assets/scripts/choices.js"></script>
   <!-- Tabler Core -->
   <script src="./dist/js/tabler.min.js"></script>
+<script>
+    const refresh = document.getElementById("refresh")
+
+    refresh.addEventListener("click", (e) =>{
+e.preventDefault()
+
+window.location.reload()
+    })
+</script>
