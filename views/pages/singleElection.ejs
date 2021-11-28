@@ -13,11 +13,7 @@
                 <%if(election.positions.length > 0){%>
                 <div class="col-auto ms-auto d-print-none">
                   <div class="d-flex btn-list">
-                    <span class="d-none d-sm-inline">
-                    <a href="#" class="btn btn-white" id="btn_release">
-                        Release Results
-                    </a>
-                </span>
+					
 				<%if(  new Date()< new Date(election.startsAt)){%>
                     <a href="/route/position/new/<%=election._id%>" class="btn btn-primary">
                       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
@@ -43,13 +39,7 @@
 									<!-- <a href="#">More information</a> -->
 								</div>
 								<%if(!election.isForcedClose){%>
-								<a
-									href="#"
-									id="force_close_trigger"
-									data-bs-toggle="modal"
-									data-bs-target="#modal_force_close"
-								>
-								</a>
+								
 								<div class="col-auto ms-auto">
 									<label class="form-check form-switch m-0">
 										Force Close
@@ -123,9 +113,9 @@
 								<dt class="col-5">Positions:</dt>
 								<dd class="col-7"><%=election.positions.length%></dd>
 								<dt class="col-5">Status:</dt>
-								<dd class="col-7">Closed</dd>
-								<dt class="col-5">Time Remaining:</dt>
-								<dd class="col-7">46.113.11.3</dd>
+								<dd class="col-7"><%if(new Date(election.startAt)< new Date()){%>Pending<%}else if(new Date()< new Date(election.endsAt)){%>Ongoing<%}else{%>Closed<%}%></dd>
+								<!-- <dt class="col-5">Time Remaining:</dt>
+								<dd class="col-7">46.113.11.3</dd> -->
 							</dl>
 						</div>
 					</div>
@@ -222,7 +212,7 @@
                     <div class="col">
                       <div class="font-weight-medium">
                         <%= totalVoteCast(position.candidates)%>
-                        <span class="float-right font-weight-medium text-green">+6.8%  <%=votePercentage(register, position.allowedVoterGroups, totalVoteCast(position.candidates))%></span>
+                        <span class="float-right font-weight-medium text-green">+<%=(totalVoteCast(position.candidates)/votePercentage(register, position.allowedVoterGroups, totalVoteCast(position.candidates))*100)%>%</span> of (<%=votePercentage(register, position.allowedVoterGroups, totalVoteCast(position.candidates))%>)
                       </div>
                       <div class="text-muted">
                         Total votes cast since <%=moment(election.startsAt).format("LL")%>
@@ -258,7 +248,31 @@
                 </table>
 					</div>
                     <div class="tab-pane" id="tabs-settings-10<%=position._id%>">
-                      <div>Donec ac vitae diam amet vel leo egestas consequat rhoncus in luctus amet, facilisi sit mauris accumsan nibh habitant senectus</div>
+                     
+								<div class="row align-items-center">
+								<div class="col-auto">
+									<!-- <a href="#">More information</a> -->
+								</div>
+								<%if(!election.isForcedClose){%>
+								
+								<div class="col-auto ms-auto">
+									<label class="form-check form-switch m-0">
+										Results released
+										<input
+											data-position = "<%=position._id%>"
+											class="form-check-input position-static"
+											type="checkbox"
+											id="resultsReleaseBtn"
+										<%if(position.isPublished){%> checked <%}%>
+										 <%if(new Date() < new Date(election.endsAt) ){%>disabled<%}%>
+                                            
+										/>
+									</label>
+								</div>
+								<%}%>
+							</div>
+
+
                     </div>
                   </div>
                 </div>
@@ -320,7 +334,27 @@
 		</div>
 	</div>
 </div>
-
+<a
+									href="#"
+									id="error_trigger"
+									data-bs-toggle="modal"
+									data-bs-target="#modal_error"
+								>
+								<a
+									href="#"
+									id="success_trigger"
+									data-bs-toggle="modal"
+									data-bs-target="#modal_success"
+								>
+								</a>
+								</a>
+<a
+									href="#"
+									id="force_close_trigger"
+									data-bs-toggle="modal"
+									data-bs-target="#modal_force_close"
+								>
+								</a>
 <div
 	class="modal modal-blur fade"
 	id="modal_force_close"
@@ -720,6 +754,139 @@
       </div>
 </div>
 
+
+<!-- ALERT GOOD-->
+<div
+	class="modal modal-blur fade"
+	id="modal_success"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button
+				type="button"
+				class="btn-close"
+				data-bs-dismiss="modal"
+				aria-label="Close"
+			></button>
+			<div class="modal-status bg-success"></div>
+			<div class="modal-body text-center py-4">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon mb-2 text-green icon-lg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					stroke-width="2"
+					stroke="currentColor"
+					fill="none"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<circle cx="12" cy="12" r="9" />
+					<path d="M9 12l2 2l4 -4" />
+				</svg>
+				<h3>Successful</h3>
+				<div class="text-muted" id="modal_success_text">
+					Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque
+					animi deleniti cupiditate eum consectetur neque, beatae aliquid?
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<!-- <a href="/route/elections" class="btn btn-white w-100">
+								Go to Elections
+							</a> -->
+						</div>
+						<div class="col">
+							<a href="" class="btn btn-success w-100" id="success_stay">
+								Okay
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ALERT BAD-->
+
+<div
+	class="modal modal-blur fade"
+	id="modal-error"
+	tabindex="-1"
+	role="dialog"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<button
+				type="button"
+				class="btn-close"
+				data-bs-dismiss="modal"
+				aria-label="Close"
+			></button>
+			<div class="modal-status bg-danger"></div>
+			<div class="modal-body text-center py-4">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="icon mb-2 text-danger icon-lg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					stroke-width="2"
+					stroke="currentColor"
+					fill="none"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<path d="M12 9v2m0 4v.01" />
+					<path
+						d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"
+					/>
+				</svg>
+				<h3>Error</h3>
+				<div class="text-muted" id="modal_error_text">
+					Do you really want to remove 84 files? What you've done cannot be
+					undone.
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="w-100">
+					<div class="row">
+						<div class="col">
+							<!-- <a
+								href="#"
+								class="btn btn-white w-100"
+								data-bs-dismiss="modal"
+							>
+								Cancel
+							</a> -->
+						</div>
+						<div class="col">
+							<a
+								href="#"
+								class="btn btn-danger w-100"
+								data-bs-dismiss="modal"
+							>
+								I will try again later
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <!-- Libs JS -->
 <script src="./dist/libs/nouislider/distribute/nouislider.min.js"></script>
 <script src="./dist/libs/litepicker/dist/litepicker.js"></script>
@@ -762,12 +929,45 @@
 <script type="text/javascript">
 	const forceCloseCheck = document.getElementById("forceClose");
 	const editElectionForm = document.getElementById("electionForm");
+	const resultsReleaseBtn = document.getElementById("resultsReleaseBtn");
 
 	forceCloseCheck.addEventListener("change", e => {
 		if (e.target.checked) {
 			document.getElementById("force_close_trigger").click();
 		}
 	});
+
+	resultsReleaseBtn.addEventListener("change", async e => {
+			
+		const positionId = e.target.dataset.position
+		
+			const setReleaseValue = await fetch(`/position/results/publish/${positionId}/<%=election._id%>`, {
+
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				
+				
+			}),
+		}).then(response => response.json());
+
+		if (setReleaseValue.status == 200) {
+			console.log(setReleaseValue.msg);
+			document.getElementById("modal_success_text").innerText = setReleaseValue.msg
+			document.getElementById("success_trigger").click();
+		} else {
+			console.log(setReleaseValue.msg);
+			document.getElementById("modal_error_text").innerText = setReleaseValue.msg
+			document.getElementById("error_trigger").click();
+
+		}
+
+		
+		
+	});
+	
 
 	editElectionForm.addEventListener("submit", async e => {
 		e.preventDefault();
