@@ -33,10 +33,120 @@
 	</div>
 
     
-    <%if(ongoingElections.length > 0){%>
+    
         
         <div class="container-xl">
         <div class="row row-cards ">
+            <div class="col-md-4">
+                    <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Closed Elections</h3>
+                </div>
+
+              <div class="list-group list-group-flush overflow-auto" style="max-height: 37rem">
+                  <div class="list-group-header sticky-top text-green">Result Released</div>
+
+                  <%if(closedElections.length > 0){%>
+                    <%for(var election of closedElections){%>
+                    <div class="list-group-item">
+                    <div class="row">
+                      <div class="col-auto">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#results<%=election._id%>">
+                          <span class="avatar" style="background-image: url(/<%=election.banner%>)"></span>
+                        </a>
+                      </div>
+                      <div class="col text-truncate">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#results<%=election._id%>" class="text-body d-block"><%=election.header%></a>
+                        <div class="text-muted text-truncate mt-n1">Closed on <%=moment(election.endsAt).format("lll")%></div>
+                      </div>
+                    </div>
+                  </div>
+
+<div class="modal modal-blur fade" id="results<%=election._id%>" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><%= election.header%> Results</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="about mb-3"><%= election.about%></div>
+              <%if(election.positions.length > 0){%>
+                <%for(var position of election.positions){%>
+                  <div class=" card mb-3">
+                      <div class="card-body">
+                      <h3 class=" card-title"><%=position.position%></h3>
+                	<div class="row align-items-center mb-3">
+                    <div class="col-auto">
+                      <span class="bg-green-lt avatar">
+							  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="9" cy="7" r="4" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+                      </span>
+                    </div>
+                    <div class="col">
+                      <div class="font-weight-medium">
+                        <%= totalVoteCast(position.candidates)%>
+                        <span class="float-right font-weight-medium text-green">+<%=(totalVoteCast(position.candidates)/votePercentage(register, position.allowedVoterGroups, totalVoteCast(position.candidates))*100)%>%</span> of ( <%=votePercentage(register, position.allowedVoterGroups, totalVoteCast(position.candidates))%> eligible voters )
+                      </div>
+                      <div class="text-muted">
+                        Total votes cast since <%=moment(election.startsAt).format("LL")%>
+                      </div>
+                    </div>
+                  			</div>
+						
+					
+                  <table class="table card-table table-vcenter">
+                  <thead>
+                    <tr>
+                      <th>Candidate</th>
+                      <th colspan="2">Votes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+					  				<%for(var candidate of position.candidates){%>
+                    <tr>
+                      <td><%=candidate.candidate.othernames%> <%=candidate.candidate.surname%></td>
+                      <td><%=candidate.voteCount%> </td>
+                      <td class="w-50">
+                        <div class="progress progress-xs">
+                          <div class="progress-bar bg-primary" style="width: <%= widthValue(position.candidates, candidate.voteCount) %>"></div>
+                        </div>
+                      </td>
+                    </tr>
+                    <%}%>  
+                  </tbody>
+                         </table> 
+                        
+                        </div>
+				
+                 </div>
+                <%}%> 
+            <%}%>
+            
+            
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button> -->
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+                </div>
+                
+
+
+                  <%}%>
+                  <%}else{%>
+                      
+                    Empty
+                
+                  <%}%>
+            </div>  
+                
+              </div>
+        </div>
+
+
+<%if(ongoingElections.length > 0){%>
             <%for(var election of ongoingElections){%>
             <div class="col-md-4">
               <div class="card">
@@ -60,7 +170,7 @@
                   <div class="tab-content">
                     <div class="tab-pane active show" id="tabs-election-<%=election._id%>">
                      <div class="">
-                          <a class=" card-link" href="#">
+                          <a class="card-link" href="#">
                 <div class="card-cover card-cover-blurred text-center" style="background-image: url(/static/photos/2854fd67ddbd6217.jpg
 )">
                   <span class="avatar avatar-xl avatar-thumb " style="background-image: url(/<%-election.banner%>)"></span>
@@ -227,6 +337,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+               <div class="alert  mb-3 d-none" id="vote_response">
+					
+				</div>
              <form id="voteCastForm<%=position._id%>">
                  <%if(position.candidates.length > 0){%>
                     <input type="text" id="thisElection" value ="<%=election._id%>" style="visibility: hidden">
@@ -289,6 +402,7 @@
 
 document.getElementById('voteCastForm<%=position._id%>').addEventListener("submit", async e=>{
     e.preventDefault();
+    const vote_response = document.getElementById('vote_response');
     const email = document.getElementById('voter_email<%=position._id%>')
     const token = document.getElementById('token<%=position._id%>')
     const candidateChoice = $("input[name=candidate<%=position._id%>]:checked").val()
@@ -309,10 +423,30 @@ const positionId = document.getElementById('positionId')
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({voter, voteToken: token.value, candidate: candidateChoice, electionId: "<%=election._id%>"}),
-		}).then(response => {
-            console.log(response);
-           return response.json()
-        });
+		}).then(response => 
+            
+           response.json()
+        );
+
+if (voteNow.status == 200) {
+      
+            vote_response.classList.remove("alert-danger")
+            vote_response.classList.add("alert-success")
+			vote_response.innerText = voteNow.msg
+			vote_response.classList.remove("d-none")
+            
+    //   setTimeout(() => {
+    //      window.location.reload()
+    //   }, 000);
+
+		} else {
+            vote_response.classList.add("alert-danger")
+			vote_response.innerText = voteNow.error
+			vote_response.classList.remove("d-none")
+            
+		}
+
+
 })
 </script>
 
@@ -331,7 +465,13 @@ No Position
     <%}%>
                     </div>
                     <div class="tab-pane" id="tabs-token-<%=election._id%>">
-                      <div class="mb-3">Donec ac vitae diam amet vel leo egestas consequat rhoncus in luctus amet, facilisi sit mauris accumsan nibh habitant senectus</div>
+                        <div class="alert alert-success mb-3 d-none" id="token_response">
+					
+				</div>
+                  
+                      <div class="mb-3">
+                          Please provide us with your school email. We will send you a vote token for this particular election immediately</div>
+                      
                       <form id="tokenForm<%=election._id%>" class="tokenForm" data-electionid="<%=election._id%>">
                         <input type="text" id="election" value="<%=election._id%>" style="visibility:hidden">
                         <div class="mb-3">
@@ -359,7 +499,7 @@ No Position
     console.log(el_id);
 
     const email = document.getElementById(`voter_mail_${el_id}`);
-    // const election = document.getElementById('election');
+    const token_response = document.getElementById('token_response');
 
     const votermail= email.value + "@live.gtuc.edu.gh"
 
@@ -371,11 +511,26 @@ No Position
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({email: votermail}),
-		}).then(response => {
-            console.log(response);
-           return response.json()
-        });
+		}).then(response =>  response.json()
+        );
+        
+if (sendMail.status == 200) {
+      
+            token_response.classList.remove("alert-danger")
+            token_response.classList.add("alert-success")
+			token_response.innerText = sendMail.msg
+			token_response.classList.remove("d-none")
+            email.value = ""
+    //   setTimeout(() => {
+    //      window.location.reload()
+    //   }, 000);
 
+		} else {
+            token_response.classList.add("alert-danger")
+			token_response.innerText = sendMail.error
+			token_response.classList.remove("d-none")
+            
+		}
         
 
 })
@@ -422,48 +577,11 @@ No Position
       </div>
             </div>
             <%}%> 
-        </div>
-    </div>
-         
+       
+         </div>
+    </div> 
     <%}else{%>
-      <div class="container-xl d-flex flex-column justify-content-center">
-		<div class="empty">
-			<div class="empty-img">
-				<img
-					src="./static/illustrations/undraw_printing_invoices_5r4r.svg"
-					height="128"
-					alt=""
-				/>
-			</div>
-			<p class="empty-title">No ongoing election at the moment</p>
-			<p class="empty-subtitle text-muted">
-				But you can still check out the results of the previous elections.
-			</p>
-			<div class="empty-action">
-				<a href="./." class="btn btn-primary">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="icon"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						stroke-width="2"
-						stroke="currentColor"
-						fill="none"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-						<circle cx="12" cy="12" r="2" />
-						<path
-							d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"
-						/>
-					</svg>
-					Check election results
-				</a>
-			</div>
-		</div>
-        </div>  
+       
     <%}%>
 	
 

@@ -17,22 +17,26 @@ app.put("/token/:electionId", async (req, res) => {
 	console.log(email);
 
 	if (!email) {
-		return res.status(400).send({ error: "missing email" });
+		return res.status(400).send({ status:400, error: "missing email" });
 	}
 
 	Register.find({ email })
 		.then(voter => {
 			
 			if (voter.length < 1) {
-				return res.status(402).send({ error: "email not found" });
+				return res
+					.status(402)
+					.send({ status: 402, error: "email not found" });
 			} else if (voter[0].eligibility == false) {
-				return res.status(402).send({ error: "not eligible" });
+				return res.status(402).send({ status: 402, error: "You are not eligible" });
 			} else {
 
 				const tokens = voter[0].tokens.map(token => token.election);
 				
 				if (tokens.includes(electionId)) {
-					return res.status(402).send({ error: "Token has already been sent" });
+					return res
+						.status(402)
+						.send({ status: 402, error: `Token has already been sent to ${email}` });
 				} else {
 					const voteCode = nanoid(6).toUpperCase();
 
@@ -40,8 +44,8 @@ app.put("/token/:electionId", async (req, res) => {
 						.then(election => {
 							if (new Date(election.endsAt) < new Date()) {
 								return res
-									.status(403)
-									.send({ error: "election has ended" });
+									.status(400)
+									.send({ status: 400, error: "Sorry the election has ended" });
 							}
 
 							console.log(voter[0]);
@@ -65,20 +69,26 @@ app.put("/token/:electionId", async (req, res) => {
 										.then(res => console.log("sent", res))
 										.catch(err => console.log("error", err.message));
 
-									return res.status(200).send(done);
+									return res.status(200).send({ status: 200, msg:`Token has been sent successfully to ${email}` });
 								})
 								.catch(error => {
 									console.log(error);
 									return res
 										.status(500)
-										.send({ error: "Could not send token" });
+										.send({
+											status: 500,
+											error: "Could not send token",
+										});
 								});
 						})
 						.catch(error => {
 							console.log(error);
 							return res
 								.status(500)
-								.send({ error: `Something went wrong 1 => ${error}` });
+								.send({
+									status: 500,
+									error: `Something went wrong with the server => ${error}`,
+								});
 						});
 				}
 
@@ -88,7 +98,10 @@ app.put("/token/:electionId", async (req, res) => {
 		.catch(error => {
 			return res
 				.status(500)
-				.send({ error: `Something went wrong 2 => ${error}` });
+				.send({
+					status: 500,
+					error: `Something went wrong with the server => ${error}`,
+				});
 		});
 });
 
@@ -122,7 +135,9 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 				election.isForcedClose == true
 			) {
 				console.log("You cannot cast vote");
-				return res.status(403).send({ error: "You cannot cast vote" });
+				return res
+					.status(403)
+					.send({ status: 400, error: "You cannot cast vote" });
 			}
 
 			// check whether the voter is eligible to vote
@@ -130,15 +145,21 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 				.then(voter => {
 					if (voter.length < 1) {
 						console.log("Voter cannot be found in the register");
-						return res.status(403).send({
-							error: "Voter cannot be found in the register",
-						});
+						return res
+							.status(400)
+							.send({
+								status: 400,
+								error: "Voter cannot be found in the register",
+							});
 					}
 					else if (!voter[0].eligibility) {
 						console.log("You cannot cast vote! You're not eligible");
-						return res.status(403).send({
-							error: "You cannot cast vote! You're not eligible",
-						});
+						return res
+							.status(403)
+							.send({
+								status: 400,
+								error: "You cannot cast vote! You're not eligible",
+							});
 					} else if (
 						!voter[0].tokens.some(token => {
 							if (
@@ -151,17 +172,23 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 						})
 					) {
 							console.log("You cannot cast vote! token invalid");
-						return res.status(403).send({
-							error: "You cannot cast vote! token invalid",
-						});
+						return res
+							.status(403)
+							.send({
+								status: 400,
+								error: "You cannot cast vote! token invalid",
+							});
 					} else {
 						Position.findById(positionId)
 							.then(position => {
 								
 								if (position.voters.includes(voter[0]._id)) {
-									return res.status(201).send({
-										msg: "You've already voted",
-									});
+									return res
+										.status(201)
+										.send({
+											status: 400,
+											error: "You've already voted",
+										});
 								} else if (
 									position.allowedVoterGroups.some(group =>
 										voter[0].groups.includes(group)
@@ -193,31 +220,52 @@ app.put("/cast/:positionId/:electionId", async (req, res) => {
 											// 		console.log(error);
 											// 	});
 												console.log(vote);
-                                            return res.status(200).send(vote);
+                                            return res
+																.status(200)
+																.send({ status: 200, msg:"Your vote was successfully"  });
 										})
 										.catch(error => {
 											console.log(error);
+											return res.status(403).send({
+												status: 500,
+												error: "Something went wrong with your vote cast",
+											});
 										});
 								} else {
 									console.log(
 										"You cannot cast vote! You do not qualify to cast vote for this position"
 									);
-									return res.status(403).send({
-										error: "You cannot cast vote! You do not qualify to cast vote for this position",
-									});
+									return res
+										.status(403)
+										.send({
+											status: 500,
+											error: "You cannot cast vote! You do not qualify to cast vote for this position",
+										});
 								}
 							})
 							.catch(error => {
 								console.log(error);
+								return res.status(403).send({
+									status: 500,
+									error: "Something went wrong - > " + error,
+								});
 							});
 					}
 				})
 				.catch(err => {
 					console.log(err);
+					return res.status(403).send({
+						status: 500,
+						error: "Something went wrong - > " + error,
+					});
 				});
 		})
 		.catch(err => {
 			console.log(err);
+			return res.status(403).send({
+				status: 500,
+				error: "Something went wrong - > " + error,
+			});
 		});
 });
 

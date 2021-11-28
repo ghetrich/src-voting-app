@@ -132,11 +132,16 @@ app.get("/pending", (req, res) => {
 app.get("/closed", (req, res) => {
 	console.log("hit");
 	Election.find({})
+		.sort({ endsAt: "DESC" })
 		.populate({
 			path: "positions",
 			populate: { path: "candidates.candidate" },
 		})
-		.populate(["createdBy"])
+		.populate({
+			path: "positions",
+			populate: { path: "allowedVoterGroups" },
+		})
+		.populate(["createdBy", "candidatesList"])
 		.then(result => {
 			const closed = result.filter(
 				election =>
